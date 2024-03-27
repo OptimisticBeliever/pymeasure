@@ -660,8 +660,8 @@ class LecroyWR606Zi(TeledyneOscilloscope):
     _BOOLS = {True: "ON", False: "OFF"}
 
     WRITE_INTERVAL_S = 0.02  # seconds
-    _TRIGGER_TYPES = ["EDGE", "WIDTH", "INTERVAL", "RUNT", "STATE", "SLEWRATE", "QUALIFY",
-                      "GLITCH", "SERIAL", "LOGIC", "DROPOUT", "TV"]
+    _TRIGGER_TYPES = ["EDGE", "WIDTH", "INTERVAL", "RUNT",  "SLEWRATE",
+                      "GLITCH",  "PATTERN", "DROPOUT", "TV"]
     ANALOG_TRIGGER_SOURCE = ['C1', 'C2', 'C3', 'C4', 'EXT', 'LINE']
     DIGITAL_TRIGGER_SOURCE = ['D0', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7',
                               'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15',
