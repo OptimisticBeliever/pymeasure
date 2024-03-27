@@ -806,14 +806,12 @@ class LecroyWR606Zi(TeledyneOscilloscope):
     )
 
     horizontal_offset = Instrument.control(
-        "VBS? 'return=app.Acquisition.Horizontal.HorOffsetOrigin",
-        "VBS 'app.Acquisition.Horizontal.HorOffsetOrigin=\"%g\"",
+        "VBS? 'return=app.Acquisition.Horizontal.HorOffset",
+        "VBS 'app.Acquisition.Horizontal.HorOffset=\"%g\"",
         """Control the horizontal position of the trigger time,
         relative to the origin set by HorOffsetOrigin, in seconds.
         Positive to the right, negative to the left.
         """,
-        validator=strict_range,
-        values=[-0.0005, 2.5e-007],
     )
 
     @property
