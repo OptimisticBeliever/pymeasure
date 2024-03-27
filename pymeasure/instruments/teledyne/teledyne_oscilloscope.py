@@ -281,8 +281,8 @@ class TeledyneOscilloscopeChannel(Channel, metaclass=ABCMeta):
 
         """,
         validator=strict_discrete_set,
-        values={"ac": "AC", "dc": "DC", "lowpass": "HFREJ", "highpass": "LFREJ"},
-        map_values=True
+        values={"ac": "AC", "dc": "DC", "lowpass": "LFREJ", "highpass": "HFREJ"},
+        map_values=True,
     )
 
     trigger_level = Instrument.control(
