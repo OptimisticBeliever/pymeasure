@@ -240,6 +240,23 @@ class LecroyWR606ZiChannel(TeledyneOscilloscopeChannel):
         else:
             return "C%d:%s" % (self.id, command)
 
+    label = Instrument.control(
+        "VBS? 'return=app.Acquisition.C{ch}.LabelsText",
+        "VBS 'app.Acquisition.C{ch}.LabelsText=\"%s\"",
+        """Control the LabelsText attached to the displayed waveform for
+           the specified channel.
+        """,
+    )
+
+    view_label = Instrument.control(
+        "VBS? 'return=app.Acquisition.C{ch}.ViewLabels",
+        "VBS 'app.Acquisition.C{ch}.ViewLabels=%s",
+        """Control whether the user-defined labels for the trace are visible.
+        """,
+        values={True: -1, False: 0},
+        map_values=True,
+    )
+
     bwlimit = Instrument.control(
         "VBS? 'return=app.Acquisition.C{ch}.BandwidthLimit",
         "VBS 'app.Acquisition.C{ch}.BandwidthLimit = \"%s\"",
@@ -588,7 +605,7 @@ class LecroyOscilloscopeMathChannel(Channel, metaclass=ABCMeta):
 
     # FFT
     math_operator1_FFT_algorithm = Instrument.control(
-        "VBS?\s'return=app.Math.F{ch}.Operator1Setup.Algorithm'",
+        "VBS? 'return=app.Math.F{ch}.Operator1Setup.Algorithm'",
         "VBS 'app.Math.F{ch}.Operator1Setup.Algorithm=\"%s\"'",
         """Control the algorithm for the FFT.""",
         validator=strict_discrete_set,
@@ -596,7 +613,7 @@ class LecroyOscilloscopeMathChannel(Channel, metaclass=ABCMeta):
     )
 
     math_operator1_FFT_fill_type = Instrument.control(
-        "VBS?\s'return=app.Math.F{ch}.Operator1Setup.FillType'",
+        "VBS? 'return=app.Math.F{ch}.Operator1Setup.FillType'",
         "VBS 'app.Math.F{ch}.Operator1Setup.FillType=\"%s\"'",
         """Control the algorithm for the FFT.""",
         validator=strict_discrete_set,
@@ -612,7 +629,7 @@ class LecroyOscilloscopeMathChannel(Channel, metaclass=ABCMeta):
     )
 
     math_operator1_FFT_output_type = Instrument.control(
-        "VBS?\s'return=app.Math.F{ch}.Operator1Setup.Type'",
+        "VBS? 'return=app.Math.F{ch}.Operator1Setup.Type'",
         "VBS 'app.Math.F{ch}.Operator1Setup.Type=\"%s\"'",
         """Control the ouptput type of FFT spectrum""",
         validator=strict_discrete_set,
@@ -620,7 +637,7 @@ class LecroyOscilloscopeMathChannel(Channel, metaclass=ABCMeta):
     )
 
     math_operator1_FFT_window_type = Instrument.control(
-        "VBS?\s'return=app.Math.F{ch}.Operator1Setup.Window'",
+        "VBS? 'return=app.Math.F{ch}.Operator1Setup.Window'",
         "VBS 'app.Math.F{ch}.Operator1Setup.Window=\"%s\"'",
         """Control the type of window for the FFT.""",
         validator=strict_discrete_set,
