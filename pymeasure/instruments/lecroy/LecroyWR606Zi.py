@@ -286,7 +286,6 @@ class LecroyWR606ZiChannel(TeledyneOscilloscopeChannel):
         When setting the trigger level it must be divided by the probe attenuation. This is
         not documented in the datasheet and it is probably a bug of the scope firmware.
         An out-of-range value will be adjusted to the closest legal value.
-        Only valid when trigger type is Runt, SlewRate.
         """,
         get_process=_remove_unit,
     )
