@@ -51,6 +51,8 @@ class TestLecroyWR606Zi:
     SAMPLING_MODES = ["RealTime", "Sequence"]
     TRIGGER_LEVELS = [0.125, 0.150, 0.175]
     TRIGGER_SLOPES = ["negative", "positive"]
+    TRIGGER_TYPES = ["edge", "pulse", "interval", "runt", "slewrate", "glitch", "pattern",
+                     "dropout", "tv"]
     ACQUISITION_AVERAGE = [4, 16, 32, 64, 128, 256]
     WAVEFORM_POINTS = [100, 1000, 10000]
     WAVEFORM_SOURCES = ["C1", "C2", "C3", "C4"]
@@ -215,6 +217,11 @@ class TestLecroyWR606Zi:
             # Bug trigger slope always return positive
             instrument.ch_1.trigger_slope = case
             # assert instrument.ch_1.trigger_slope == case
+
+    @pytest.mark.parametrize("case", TRIGGER_TYPES)
+    def test_trigger_type(self, case, instrument):
+        instrument.trigger_type = case
+        assert instrument.trigger_type == case
 
     # Timebase
     def test_timebase(self, resetted_instrument):
