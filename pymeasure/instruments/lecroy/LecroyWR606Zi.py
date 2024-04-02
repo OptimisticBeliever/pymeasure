@@ -979,8 +979,8 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         validator=strict_discrete_set,
         values=TRIGGER_TYPES,
         map_values=True,
-        get_process=lambda v: v.upper(),
         dynamic=True,
+        preprocess_reply=lambda v: v.upper(),
     )
 
     def center_trigger(self):
