@@ -259,13 +259,27 @@ class LecroyWR606ZiChannel(TeledyneOscilloscopeChannel):
 
     bwlimit = Instrument.control(
         "VBS? 'return=app.Acquisition.C{ch}.BandwidthLimit",
-        "VBS 'app.Acquisition.C{ch}.BandwidthLimit = \"%s\"",
+        "VBS 'app.Acquisition.C{ch}.BandwidthLimit=\"%s\"",
         """Control the bandwidth limit for input channel in Hz.
 
         Available arguments depend upon the instrument and the attached accessories.
         """,
         validator=strict_discrete_set,
         values={"20MHz": "20MHz", "200MHz": "200Mhz", "1GHz": "Full"},
+        map_values=True,
+    )
+
+    coupling = Instrument.control(
+        "VBS? 'return=app.Acquisition.C{ch}.Coupling",
+        "VBS 'app.Acquisition.C{ch}.Coupling=\"%s\"",
+        """Control the input coupling.
+
+        Note that coupling choices vary between instrument models. 
+        WavePro 7000 instruments for example support AC1M and DC1M
+        modes in addition to DC50 and GND choices.
+        """,
+        validator=strict_discrete_set,
+        values={"ac": "AC1M", "dc": "DC1M", "dc50": "DC50", "ground": "Gnd"},
         map_values=True,
     )
 
@@ -679,8 +693,8 @@ class LecroyWR606Zi(TeledyneOscilloscope):
     TRIGGER_TYPES = {"edge": "EDGE", "pulse": "WIDTH", "interval": "INTERVAL", "runt": "RUNT",
                      "slewrate": "SLEWRATE", "glitch": "GLITCH", "pattern":  "PATTERN",
                      "dropout": "DROPOUT", "tv": "TV"}
-    ANALOG_TRIGGER_SOURCE = {"channel1": "C1", "channel2": "C2", "channel3": "C3", "channel4": "C4",
-                      "external": "EXT", "line": "LINE"}
+    ANALOG_TRIGGER_SOURCE = {"channel1": "C1", "channel2": "C2", "channel3": "C3",
+                             "channel4": "C4", "external": "EXT", "line": "LINE"}
     DIGITAL_TRIGGER_SOURCE = ['D0', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7',
                               'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15',
                               'D16', 'D17', 'D18', 'D19', 'D20', 'D21', 'D22', 'D23',
