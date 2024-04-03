@@ -57,7 +57,7 @@ class TestLecroyWR606Zi:
     WAVEFORM_POINTS = [100, 1000, 10000]
     WAVEFORM_SOURCES = ["C1", "C2", "C3", "C4"]
     CHANNELS = [1, 2, 3, 4]
-    BANDWIDTH_LIMITS = ["Full", "20MHz", "200MHz"]
+    BANDWIDTH_LIMITS = ["1GHz", "20MHz", "200MHz"]
     MEAS_SLOTS = {1: "PKPK", 2: "WID", 3: "DUTY", 4: "FREQ"}
     EXPECTED_MEAS_VALUES = {'PKPK': 1, 'WID': 500.0000E-6, 'DUTY': 50,
                             'FREQ': 1.0000E3}
@@ -150,7 +150,7 @@ class TestLecroyWR606Zi:
         expected = {
             "channel": 1,
             "attenuation": 10.0,
-            "bandwidth_limit": "Full",
+            "bandwidth_limit": "1GHz",
             "coupling": "dc",
             "offset": 0.0,
             "display": True,
