@@ -265,7 +265,7 @@ class LecroyWR606ZiChannel(TeledyneOscilloscopeChannel):
         Available arguments depend upon the instrument and the attached accessories.
         """,
         validator=strict_discrete_set,
-        values={"20MHz": "20MHz", "200MHz": "200Mhz", "1GHz": "Full"},
+        values={"20MHz": "20MHz", "200MHz": "200MHz", "1GHz": "Full"},
         map_values=True,
     )
 
