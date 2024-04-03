@@ -47,7 +47,7 @@ class TestLecroyWR606Zi:
     #########################
 
     BOOLEANS = [False, True]
-    CHANNEL_COUPLINGS = ["ac 1M", "dc 1M", "ground"]
+    CHANNEL_COUPLINGS = ["ac", "dc", "ground"]
     SAMPLING_MODES = ["RealTime", "Sequence"]
     TRIGGER_LEVELS = [0.125, 0.150, 0.175]
     TRIGGER_SLOPES = ["negative", "positive"]
@@ -151,7 +151,7 @@ class TestLecroyWR606Zi:
             "channel": 1,
             "attenuation": 10.0,
             "bandwidth_limit": "Full",
-            "coupling": "dc 1M",
+            "coupling": "dc",
             "offset": 0.0,
             "display": True,
             "volts_div": 0.5,
@@ -296,7 +296,7 @@ class TestLecroyWR606Zi:
             instrument.ch(5)
         instrument.ch(ch_number).setup(
             bwlimit="20MHz",
-            coupling="dc 1M",
+            coupling="dc",
             display=True,
             invert=False,
             offset=0.0,
@@ -311,7 +311,7 @@ class TestLecroyWR606Zi:
             "channel": ch_number,
             "attenuation": 10.0,
             "bandwidth_limit": "20MHz",
-            "coupling": "dc 1M",
+            "coupling": "dc",
             "offset": 0.0,
             "display": True,
             "volts_div": 0.05,
