@@ -345,7 +345,7 @@ class TestLecroyWR606Zi:
 
     @pytest.mark.parametrize("param_engine", PARAM_ENGINE)
     def test_measurement_configure(self, instrument, param_engine):
-        instrument.measurement_configure(1, "C1", "C2", param_engine)
+        instrument.measurement_configure(1, "channel1", "channel2", param_engine)
         print(instrument.measurement_result_status(1))
         assert instrument.ask("VBS? 'return=app.Measure.P1.ParamEngine'").strip() == param_engine
 
