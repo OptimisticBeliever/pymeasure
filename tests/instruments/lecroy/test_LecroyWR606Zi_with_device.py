@@ -53,6 +53,7 @@ class TestLecroyWR606Zi:
     TRIGGER_SLOPES = ["negative", "positive"]
     TRIGGER_TYPES = ["edge", "pulse", "interval", "runt", "slewrate", "glitch", "pattern",
                      "dropout", "tv"]
+    TRIGGER_COUPLING = ["ac", "dc", "lowpass", "highpass"]
     ACQUISITION_AVERAGE = [4, 16, 32, 64, 128, 256]
     WAVEFORM_POINTS = [100, 1000, 10000]
     WAVEFORM_SOURCES = ["C1", "C2", "C3", "C4"]
@@ -209,19 +210,24 @@ class TestLecroyWR606Zi:
         resetted_instrument.ch(ch_number).trigger_level = trig_level
         assert resetted_instrument.ch(ch_number).trigger_level == trig_level
 
-    def test_ch_trigger_slope(self, instrument):
-        with pytest.raises(ValueError):
-            instrument.ch_1.trigger_slope = "abcd"
-        instrument.trigger_select = ("edge", "c2", "off")
-        for case in self.TRIGGER_SLOPES:
-            # Bug trigger slope always return positive
-            instrument.ch_1.trigger_slope = case
-            # assert instrument.ch_1.trigger_slope == case
+    @pytest.mark.parametrize("trig_slope", TRIGGER_SLOPES)
+    @pytest.mark.parametrize("ch_number", CHANNELS)
+    def test_ch_trigger_slope(self, instrument, trig_slope, ch_number):
+        # Bug CH1 and CH2 trigger slope always return positive
+        instrument.ch(ch_number).trigger_slope = trig_slope
+        assert instrument.ch(ch_number).trigger_slope == trig_slope
 
     @pytest.mark.parametrize("case", TRIGGER_TYPES)
     def test_trigger_type(self, case, instrument):
         instrument.trigger_type = case
         assert instrument.trigger_type == case
+
+    @pytest.mark.parametrize("trig_coupling", TRIGGER_COUPLING)
+    @pytest.mark.parametrize("ch_number", CHANNELS)
+    def test_ch_trigger_coupling(self, trig_coupling, ch_number, instrument):
+        instrument.ch(ch_number).trigger_coupling = trig_coupling
+        # bug on the channel 1 and 2 always return dc coupling
+        assert instrument.ch(ch_number).trigger_coupling == trig_coupling
 
     # Timebase
     def test_timebase(self, resetted_instrument):
