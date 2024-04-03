@@ -105,8 +105,9 @@ class TektronixMsoScopeChannel(Channel):
         Available arguments depend upon the instrument and the attached accessories.
         """,
         validator=strict_range,
-        values=[20.0000E+6, 250.0000E+6, 500.0000E+6, 1.0000E+9],
-        dynamic=True,
+        values={"20MHz": 20.0000E+6, "250MHz": 250.0000E+6,
+                "500MHz": 500.0000E+6, "1GHz": 1.0000E+9},
+        map_values=True,
     )
 
     coupling = Instrument.control(
