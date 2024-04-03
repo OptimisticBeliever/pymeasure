@@ -679,7 +679,8 @@ class LecroyWR606Zi(TeledyneOscilloscope):
     TRIGGER_TYPES = {"edge": "EDGE", "pulse": "WIDTH", "interval": "INTERVAL", "runt": "RUNT",
                      "slewrate": "SLEWRATE", "glitch": "GLITCH", "pattern":  "PATTERN",
                      "dropout": "DROPOUT", "tv": "TV"}
-    ANALOG_TRIGGER_SOURCE = ['C1', 'C2', 'C3', 'C4', 'EXT', 'LINE']
+    ANALOG_TRIGGER_SOURCE = {"channel1": "C1", "channel2": "C2", "channel3": "C3", "channel4": "C4",
+                      "external": "EXT", "line": "LINE"}
     DIGITAL_TRIGGER_SOURCE = ['D0', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7',
                               'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15',
                               'D16', 'D17', 'D18', 'D19', 'D20', 'D21', 'D22', 'D23',
@@ -968,7 +969,8 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         "VBS 'app.Acquisition.Trigger.Source=\"%s\"",
         """Control the source trigger.""",
         validator=strict_discrete_set,
-        values=ANALOG_TRIGGER_SOURCE + DIGITAL_TRIGGER_SOURCE,
+        values=ANALOG_TRIGGER_SOURCE,
+        map_values=True,
         dynamic=True,
     )
 
@@ -1078,9 +1080,12 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         :param meas_type: str measurement type"""
         slot = strict_range(slot, [1, 8])
         source1 = strict_discrete_set(source1, self.ANALOG_TRIGGER_SOURCE)
+        source1 = self.ANALOG_TRIGGER_SOURCE[source1]
         source2 = strict_discrete_set(source2, self.ANALOG_TRIGGER_SOURCE)
+        source2 = self.ANALOG_TRIGGER_SOURCE[source2]
         meas_type = strict_discrete_set(meas_type, self._measurable_parameters)
         self.write(f"VBS 'app.Measure.P{slot}.View=True'")
+        self.write(f"VBS 'app.Measure.ShowMeasure=True'")
         self.write(f"VBS 'app.Measure.P{slot}.Source1=\"{source1}\"'")
         self.write(f"VBS 'app.Measure.P{slot}.Source2=\"{source2}\"'")
         self.measurement_type = (slot, meas_type)
