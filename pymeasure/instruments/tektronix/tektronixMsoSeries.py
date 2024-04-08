@@ -68,6 +68,20 @@ def _math_define_validator(value, values):
     return output
 
 
+def _measurement_add_validator(value, values):
+    """
+    Validate the input of the measurement_add property
+    :param value: input parameters as a 2-element tuple
+    :param values: allowed space for each parameter
+    """
+    if not isinstance(value, tuple):
+        raise ValueError('Input value {} of measurement_add should be a tuple'.format(value))
+    if len(value) != 2:
+        raise ValueError('Number of parameters {} different from 2'.format(len(value)))
+    output = (strict_range(value[0], values[0]), strict_discrete_set(value[1], values[1]))
+    return output
+
+
 class TektronixMsoScopeChannel(Channel):
     """Implementation of a scope base class channel."""
 
@@ -975,26 +989,22 @@ class TektronixMsoScope(Instrument):
         return bytearray(img)
 
     # Measurement
-    _measurable_parameters = ["ACCOMMONMODE", "ACRMS", "AMPlITUDE", "AREA", "BASE", "BITAMPLITUDE",
-                              "BITHIGH", "BITLOW", "BURSTWIDTH", "COMMONMODE", "DATARATE", "DCD",
-                              "DDJ", "DDRAOS", "DDRAOSPERTCK", "DDRAOSPERUI", "DDRAUS",
-                              "DDRAUSPERTCK", "DDRAUSPERUI", "DDRHOLDDIFF", "DDRSETUPDIFF",
-                              "DDRTCHABS", "DDRTCHAVERAGE", "DDRTCKAVERAGE", "DDRTCLABS",
-                              "DDRTCLAVERAGE", "DDRTERRMN", "DDRTERRN", "DDRTJITCC", "DDRTJITDUTY",
-                              "DDRTJITPER", "DDRTPST", "DDRTRPRE", "DDRTWPRE", "DDRVIXAC",
-                              "DDRTDQSCK", "DELAY", "DJ", "DJDIRAC", "EYEHIGH", "EYELOW",
-                              "FALLSLEWRATE", "FALLTIME", "FREQUENCY", "F2", "F4", "F8", "HEIGHT",
-                              "HEIGHTBER", "HIGH", "HIGHTIME", "HOLD", "IMDAPOWERQUALITY",
-                              "IMDAHARMONICS", "IMDAINPUTVOLTAGE", "IMDAINPUTCURRENT",
-                              "IMDAINPUTPOWER", "IMDAPHASORDIAGRAM", "IMDAEFFICIENCY",
-                              "IMDALINERIPPLE", "IMDASWITCHRIPPLE", "IMDADQ0", "JITTERSUMMARY",
-                              "J2", "J9", "LOW", "LOWTIME", "MAXIMUM", "MEAN", "MINIMUM", "NDUTY",
-                              "NOVERSHOOT", "NPERIOD", "NPJ", "NWIDTH", "PDUTY", "PERIOD", "PHASE",
-                              "PHASENOISE", "PJ", "PK2PK", "POVERSHOOT", "PWIDTH", "QFACTOR",
-                              "RISESLEWRATE", "RISETIME", "RJ", "RJDIRAC", "RMS", "SETUP", "SKEW",
-                              "SRJ", "SSCFREQDEV", "SSCMODRATE", "TIE", "TIMEOUTSIDELEVEL",
-                              "TIMETOMAX", "TIMETOMIN", "TJBER", "TNTRATIO", "TOP", "UNITINTERVAL",
-                              "VDIFFXOVR", "WIDTH", "WIDTHBER"]
+    _measurable_parameters = {"amplitude": "AMPLITUDE", "base": "BASE", "maximum": "MAXIMUM",
+                              "mean": "MEAN", "minimum": "MINIMUM", "pkpk": "PK2PK",
+                              "rms": "RMS", "top": "TOP", "acrms": "ACRMS", "area": "AREA",
+                              "dutycylce": "PDUTY", "delay": "DELAY", "falltime": "FALLTIME",
+                              "risetime": "RISETIME", "frequency": "FREQUENCY", "period": "PERIOD",
+                              "pwidth": "PWIDTH", "nwidth": "NWIDTH", "skew": "SKEW",
+                              "phase": "PHASE", "holdtime": "HOLD", "setuptime": "SETUP",
+                              "burstwidth": "BURSTWIDTH", "datarate": "DATARATE",
+                              "fallslewrate": "FALLSLEWRATE", "high": "HIGH",
+                              "hightime": "HIGHTIME", "low": "LOW", "lowtime": "LOWTIME",
+                              "nduty": "NDUTY", "novershoot": "NOVERSHOOT",
+                              "nperiod": "NPERIOD", "phasenoise": "PHASENOISE",
+                              "povershoot": "POVERSHOOT", "tie": "TIE",
+                              "timeoutsidelevel": "TIMEOUTSIDELEVEL", "timetomax": "TIMETOMAX",
+                              "timetomin": "TIMETOMIN", "unitinterval": "UNITINTERVAL",
+                              }
 
     measurement_add_slot = Instrument.setting(
         "MEASUrement:ADDNew MEAS%d",
@@ -1008,6 +1018,7 @@ class TektronixMsoScope(Instrument):
         """Set a measurement.""",
         validator=strict_discrete_set,
         values=_measurable_parameters,
+        map_values=True,
     )
 
     measurement_gating_type = Instrument.control(
@@ -1166,8 +1177,11 @@ class TektronixMsoScope(Instrument):
         :param meas_type: str measurement type"""
         slot = truncated_range(slot, [1, 1000])
         source1 = strict_discrete_set(source1, self.ANALOG_TRIGGER_SOURCE)
+        source1 = self.ANALOG_TRIGGER_SOURCE[source1]
         source2 = strict_discrete_set(source2, self.ANALOG_TRIGGER_SOURCE)
+        source2 = self.ANALOG_TRIGGER_SOURCE[source2]
         meas_type = strict_discrete_set(meas_type, self._measurable_parameters)
+        meas_type = self._measurable_parameters[meas_type]
         self.write(f'MEASUrement:MEAS{slot}:SOUrce1 {source1};*WAI')
         self.write(f'MEASUrement:MEAS{slot}:SOUrce2 {source2};*WAI')
         self.write(f'MEASUrement:MEAS{slot}:TYPe {meas_type};*WAI')
