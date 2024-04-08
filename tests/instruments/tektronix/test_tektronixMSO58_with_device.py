@@ -31,9 +31,36 @@ class TestTektronixMSO58:
     ACQUISITION_AVERAGE = [4, 16, 32, 64, 128, 256]
     ACQUISITION_STATE = ["RUN", "STOP"]
     CHANNELS = [1, 2, 3, 4, 5, 6, 7, 8]
-    MEAS_SLOTS = {1: "PK2PK", 2: "PWIDTH", 3: "NWIDTH", 4: "FREQUENCY"}
-    EXPECTED_MEAS_VALUES = {'PK2PK': 2.5, 'PWIDTH': 500.0000E-6, 'NWIDTH': 500.0000E-6,
-                            'FREQUENCY': 1.0000E3}
+    MEAS_SLOTS = {1: "pkpk", 2: "pwidth", 3: "nwidth", 4: "frequency"}
+    MEASURABLE_PARAMETERS = ["amplitude", "base", "maximum", "mean", "minimum", "pkpk",
+                             "rms", "top", "acrms", "area", "dutycylce", "delay",
+                             "falltime", "risetime", "frequency", "period", "pwidth", "nwidth",
+                             "skew", "phase", "holdtime", "setuptime", "burstwidth", "datarate",
+                             "fallslewrate", "high", "hightime", "low", "lowtime",
+                             "nduty", "novershoot", "nperiod", "phasenoise",
+                             "povershoot", "tie", "timeoutsidelevel",
+                             "timetomax", "timetomin", "unitinterval",
+                             ]
+
+    _MEASURABLE_PARAMETERS = {"amplitude": "AMPLITUDE", "base": "BASE", "maximum": "MAXIMUM",
+                              "mean": "MEAN", "minimum": "MINIMUM", "pkpk": "PK2PK",
+                              "rms": "RMS", "top": "TOP", "acrms": "ACRMS", "area": "AREA",
+                              "dutycylce": "PDUTY", "delay": "DELAY", "falltime": "FALLTIME",
+                              "risetime": "RISETIME", "frequency": "FREQUENCY", "period": "PERIOD",
+                              "pwidth": "PWIDTH", "nwidth": "NWIDTH", "skew": "SKEW",
+                              "phase": "PHASE", "holdtime": "HOLD", "setuptime": "SETUP",
+                              "burstwidth": "BURSTWIDTH", "datarate": "DATARATE",
+                              "fallslewrate": "FALLSLEWRATE", "high": "HIGH",
+                              "hightime": "HIGHTIME", "low": "LOW", "lowtime": "LOWTIME",
+                              "nduty": "NDUTY", "novershoot": "NOVERSHOOT",
+                              "nperiod": "NPERIOD", "phasenoise": "PHASENOISE",
+                              "povershoot": "POVERSHOOT", "tie": "TIE",
+                              "timeoutsidelevel": "TIMEOUTSIDELEVEL", "timetomax": "TIMETOMAX",
+                              "timetomin": "TIMETOMIN", "unitinterval": "UNITINTERVAL",
+                              }
+
+    EXPECTED_MEAS_VALUES = {'pkpk': 2.5, 'pwidth': 500.0000E-6, 'nwidth': 500.0000E-6,
+                            'frequency': 1.0000E3}
     AFG_FUNCTIONS = ["SINE", "SQUARE", "PULSE", "RAMP", "NOISE", "DC", "SINC", "GAUSSIAN",
                      "LORENTZ", "ERISE", "EDECAY", "HAVERSINE", "CARDIAC", "ARBITRARY"]
     AFG_OUTPUT_MODES = ["OFF", "CONTINUOUS", "BURST"]
@@ -230,6 +257,12 @@ class TestTektronixMSO58:
             print("empty image")
 
     # Measurement
+    @pytest.mark.parametrize("case", MEASURABLE_PARAMETERS)
+    def test_measurement_add(self, instrument, case):
+        instrument.measurement_clear_all()
+        instrument.measurement_add = case
+        assert instrument.ask("MEASUrement:MEAS1:TYPe?").strip() == self._MEASURABLE_PARAMETERS[case]
+
     # @pytest.mark.skip(reason="connect CH1 probe to ground and probe compensation connectors")
     def test_measurement_configure(self, autoscaled_instrument):
         for (slot, meas_type), (meas, value) in \
