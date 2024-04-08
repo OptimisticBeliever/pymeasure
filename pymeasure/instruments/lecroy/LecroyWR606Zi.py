@@ -171,6 +171,81 @@ class CMR(IntFlag):
     EXTRA_BYTES_DETECTED_DURING_DEFINITE_LENGTH_DATA_BLOCK_TRANSFER = 13
 
 
+measurable_parameters_full = {
+    "amplitude": "Amplitude", "base": "Base", "maximum": "Maximum",
+    "mean": "Mean", "minimum": "Minimum", "pkpk": "PeakToPeak",
+    "rms": "RootMeanSquare", "top": "Top", "area": "Area",
+    "dutycylce": "DutyCycle", "delay": "DeltaDelay", "falltime": "Fall",
+    "risetime": "Rise", "frequency": "Frequency", "period": "Period",
+    "pwidth": "Width", "nwidth": "WidthNegative", "skew": "Skew",
+    "phase": "Phase", "holdtime": "HoldTime", "setuptime": "Setup",
+    "povershoot": "OvershootPositive", "novershoot": "OvershootNegative",
+    "cycle": "Cycles", "delay50": "Delay", "DutyAtLevel": "DutyAtLevel",
+    "DeltaPeriodAtLevel": "DeltaPeriodAtLevel",
+    "DeltaTimeAtLevel": "DeltaTimeAtLevel",
+    "DeltaTriggerTime": "DeltaTriggerTime",
+    "DeltaWidthAtLevel": "DeltaWidthAtLevel",
+    "DOV": "DOV", "Duration": "Duration",
+    "DutyCycleDistortion": "DutyCycleDistortion",
+    "EdgeAtLevel": "EdgeAtLevel", "EMClvlPulse": "EMClvlPulse",
+    "EMCt2Val": "EMCt2Val", "EOvshN": "EOvshN", "EOvshP": "EOvshP",
+    "ExcelParam": "ExcelParam", "ExtinctionRatio": "ExtinctionRatio",
+    "EyeAmplitude": "EyeAmplitude", "EyeAvgPower": "EyeAvgPower",
+    "EyeBER": "EyeBER", "EyeCrossing": "EyeCrossing",
+    "EyeHeight": "EyeHeight", "EyeOneLevel": "EyeOneLevel",
+    "EyeQFactor": "EyeQFactor", "EyeWidth": "EyeWidth",
+    "EyeZeroLevel": "EyeZeroLevel", "Fall8020": "Fall8020",
+    "FallAtLevel": "FallAtLevel", "FastMultiWPort": "FastMultiWPort",
+    "FirstPoint": "FirstPoint", "FrequencyAtLevel": "FrequencyAtLevel",
+    "FullWidthAtHalfMaximum": "FullWidthAtHalfMaximum",
+    "FullWidthAtXX": "FullWidthAtXX", "GapWidth": "GapWidth",
+    "GBM1FGDroop": "GBM1FGDroop", "GBM1HJDroop": "GBM1HJDroop",
+    "HalfPeriod": "HalfPeriod", "HistogramAmplitude": "HistogramAmplitude",
+    "HistogramBase": "HistogramBase", "HistogramMaximum": "HistogramMaximum",
+    "HistogramMean": "HistogramMean", "HistogramMedian": "HistogramMedian",
+    "HistogramMid": "HistogramMid", "HistogramMinimum": "HistogramMinimum",
+    "HistogramRms": "HistogramRms", "HistogramSdev": "HistogramSdev",
+    "HistogramTop": "HistogramTop", "HParamScript": "HParamScript",
+    "I2StoValue": "I2StoValue", "LastPoint": "LastPoint",
+    "LevelAtX": "LevelAtX", "LocalBase": "LocalBase",
+    "LocalBaselineSeparation": "LocalBaselineSeparation",
+    "LocalMaximum": "LocalMaximum", "LocalMinimum": "LocalMinimum",
+    "LecroyWR606ZiLocalNumber": "LocalNumber",
+    "LocalPeakToPeak": "LocalPeakToPeak",
+    "LocalTimeAtMaximum": "LocalTimeAtMaximum",
+    "LocalTimeAtMinimum": "LocalTimeAtMinimum",
+    "LocalTimeBetweenEvent": "LocalTimeBetweenEvent",
+    "LocalTimeBetweenPeaks": "LocalTimeBetweenPeaks",
+    "LocalTimeBetweenTroug": "LocalTimeBetweenTroug",
+    "LocalTimeOverThreshold": "LocalTimeOverThreshold",
+    "LocalTimePeakToTrough": "LocalTimePeakToTrough",
+    "LocalTimeTroughToPeak": "LocalTimeTroughToPeak",
+    "LocalTimeUnderThreshol": "LocalTimeUnderThreshol",
+    "MathcadParam": "MathcadParam", "MATLABParameter": "MATLABParameter",
+    "MaximumPopulation": "MaximumPopulation", "Median": "Median",
+    "Mode": "Mode", "NarrowBandPhase": "NarrowBandPhase",
+    "NarrowBandPower": "NarrowBandPower", "NCycleJitter": "NCycleJitter",
+    "NonLinearTransitionShift": "NonLinearTransitionShift",
+    "npoints": "npoints", "Null": "Null", "NumberOfModes": "NumberOfModes",
+    "Overwrite": "Overwrite", "ParamScript": "ParamScript",
+    "PEAKMAG": "PEAKMAG", "Peaks": "Peaks", "Percentile": "Percentile",
+    "PeriodAtLevel": "PeriodAtLevel", "PopulationAtX": "PopulationAtX",
+    "PowerFactor": "PowerFactor", "Protocol2Analog": "Protocol2Analog",
+    "Protocol2Protocol": "Protocol2Protocol",
+    "Protocol2Value": "Protocol2Value", "ProtocolBitrate": "ProtocolBitrate",
+    "ProtocolLoad": "ProtocolLoad",
+    "ProtocolNumMessages": "ProtocolNumMessages", "PW50": "PW50",
+    "PW50Negative": "PW50Negative", "PW50Positive": "PW50Positive",
+    "Range": "Range", "RealPower": "RealPower", "Resolution": "Resolution",
+    "Rise2080": "Rise2080", "RiseAtLevel": "RiseAtLevel", "SAS": "SAS",
+    "Slew": "Slew", "StandardDeviation": "StandardDeviation", "TAA": "TAA",
+    "TAANegative": "TAANegative", "TAAPositive": "TAAPositive", "TIE": "TIE",
+    "TimeAtCAN": "TimeAtCAN", "TimeAtLevel": "TimeAtLevel",
+    "TimeAtProtocol": "TimeAtProtocol", "TotalPopulation": "TotalPopulation",
+    "timetUpS": "tUpS", "WidthAtLevel": "WidthAtLevel",
+    "XAtMaximum": "XAtMaximum", "XAtMinimum": "XAtMinimum", "XAtPeak": "XAtPeak"
+                              }
+
 def _math_define_validator(value, values):
     """
     Validate the input of the math_define property
@@ -197,7 +272,8 @@ def _measurement_add_validator(value, values):
         raise ValueError('Input value {} of measurement_add should be a tuple'.format(value))
     if len(value) != 2:
         raise ValueError('Number of parameters {} different from 2'.format(len(value)))
-    output = (strict_range(value[0], values[0]), strict_discrete_set(value[1], values[1]))
+    output = (strict_range(value[0], values[0]),
+              measurable_parameters_full[strict_discrete_set(value[1], values[1])])
     return output
 
 
@@ -701,41 +777,79 @@ class LecroyWR606Zi(TeledyneOscilloscope):
                               'D24', 'D25', 'D26', 'D27', 'D28', 'D29', 'D30', 'D31',
                               'D32', 'D33', 'D34', 'D35']
 
-    _measurable_parameters = ["Amplitude", "Area", "Base", "Cycles", "Delay", "DeltaDelay",
-                              "DeltaPeriodAtLevel", "DeltaTimeAtLevel", "DeltaTriggerTime",
-                              "DeltaWidthAtLevel", "DOV", "Duration", "DutyAtLevel", "DutyCycle",
-                              "DutyCycleDistortion", "EdgeAtLevel", "EMClvlPulse", "EMCt2Val",
-                              "EOvshN", "EOvshP", "ExcelParam", "ExtinctionRatio", "EyeAmplitude",
-                              "EyeAvgPower", "EyeBER", "EyeCrossing", "EyeHeight", "EyeOneLevel",
-                              "EyeQFactor", "EyeWidth", "EyeZeroLevel", "Fall", "Fall8020",
-                              "FallAtLevel", "FastMultiWPort", "FirstPoint", "Frequency",
-                              "FrequencyAtLevel", "FullWidthAtHalfMaximum", "FullWidthAtXX",
-                              "GapWidth", "GBM1FGDroop", "GBM1HJDroop", "HalfPeriod",
-                              "HistogramAmplitude", "HistogramBase", "HistogramMaximum",
-                              "HistogramMean", "HistogramMedian", "HistogramMid",
-                              "HistogramMinimum", "HistogramRms", "HistogramSdev", "HistogramTop",
-                              "HoldTime", "HParamScript", "I2StoValue", "LastPoint", "LevelAtX",
-                              "LocalBase", "LocalBaselineSeparation", "LocalMaximum",
-                              "LocalMinimum", "LocalNumber", "LocalPeakToPeak",
-                              "LocalTimeAtMaximum", "LocalTimeAtMinimum", "LocalTimeBetweenEvent",
-                              "LocalTimeBetweenPeaks", "LocalTimeBetweenTroug",
-                              "LocalTimeOverThreshold", "LocalTimePeakToTrough",
-                              "LocalTimeTroughToPeak", "LocalTimeUnderThreshol", "MathcadParam",
-                              "MATLABParameter", "Maximum", "MaximumPopulation", "Mean", "Median",
-                              "Minimum", "Mode", "NarrowBandPhase", "NarrowBandPower",
-                              "NCycleJitter", "NonLinearTransitionShift", "npoints", "Null",
-                              "NumberOfModes", "OvershootNegative", "OvershootPositive",
-                              "Overwrite", "ParamScript", "PEAKMAG", "Peaks", "PeakToPeak",
-                              "Percentile", "Period", "PeriodAtLevel", "Phase", "PopulationAtX",
-                              "PowerFactor", "Protocol2Analog", "Protocol2Protocol",
-                              "Protocol2Value", "ProtocolBitrate", "ProtocolLoad",
-                              "ProtocolNumMessages", "PW50", "PW50Negative", "PW50Positive",
-                              "Range", "RealPower", "Resolution", "Rise", "Rise2080",
-                              "RiseAtLevel", "RootMeanSquare", "SAS", "Setup", "Skew", "Slew",
-                              "StandardDeviation", "TAA", "TAANegative", "TAAPositive", "TIE",
-                              "TimeAtCAN", "TimeAtLevel", "TimeAtProtocol", "Top",
-                              "TotalPopulation", "tUpS", "Width", "WidthAtLevel", "WidthNegative",
-                              "XAtMaximum", "XAtMinimum", "XAtPeak"]
+    measurable_parameters = {"amplitude": "Amplitude", "base": "Base", "maximum": "Maximum",
+                              "mean": "Mean", "minimum": "Minimum", "pkpk": "PeakToPeak",
+                              "rms": "RootMeanSquare", "top": "Top", "area": "Area",
+                              "dutycylce": "DutyCycle", "delay": "DeltaDelay", "falltime": "Fall",
+                              "risetime": "Rise", "frequency": "Frequency", "period": "Period",
+                              "pwidth": "Width", "nwidth": "WidthNegative", "skew": "Skew",
+                              "phase": "Phase", "holdtime": "HoldTime", "setuptime": "Setup",
+                              "povershoot": "OvershootPositive", "novershoot": "OvershootNegative",
+                              "cycle": "Cycles", "delay50": "Delay", "DutyAtLevel": "DutyAtLevel",
+                              "DeltaPeriodAtLevel": "DeltaPeriodAtLevel",
+                              "DeltaTimeAtLevel": "DeltaTimeAtLevel",
+                              "DeltaTriggerTime": "DeltaTriggerTime",
+                              "DeltaWidthAtLevel": "DeltaWidthAtLevel",
+                              "DOV": "DOV", "Duration": "Duration",
+                              "DutyCycleDistortion": "DutyCycleDistortion",
+                              "EdgeAtLevel": "EdgeAtLevel", "EMClvlPulse": "EMClvlPulse",
+                              "EMCt2Val": "EMCt2Val", "EOvshN": "EOvshN", "EOvshP": "EOvshP",
+                              "ExcelParam": "ExcelParam", "ExtinctionRatio": "ExtinctionRatio",
+                              "EyeAmplitude": "EyeAmplitude", "EyeAvgPower": "EyeAvgPower",
+                              "EyeBER": "EyeBER", "EyeCrossing": "EyeCrossing",
+                              "EyeHeight": "EyeHeight", "EyeOneLevel": "EyeOneLevel",
+                              "EyeQFactor": "EyeQFactor", "EyeWidth": "EyeWidth",
+                              "EyeZeroLevel": "EyeZeroLevel", "Fall8020": "Fall8020",
+                              "FallAtLevel": "FallAtLevel", "FastMultiWPort": "FastMultiWPort",
+                              "FirstPoint": "FirstPoint", "FrequencyAtLevel": "FrequencyAtLevel",
+                              "FullWidthAtHalfMaximum": "FullWidthAtHalfMaximum",
+                              "FullWidthAtXX": "FullWidthAtXX", "GapWidth": "GapWidth",
+                              "GBM1FGDroop": "GBM1FGDroop", "GBM1HJDroop": "GBM1HJDroop",
+                              "HalfPeriod": "HalfPeriod", "HistogramAmplitude": "HistogramAmplitude",
+                              "HistogramBase": "HistogramBase", "HistogramMaximum": "HistogramMaximum",
+                              "HistogramMean": "HistogramMean", "HistogramMedian": "HistogramMedian",
+                              "HistogramMid": "HistogramMid", "HistogramMinimum": "HistogramMinimum",
+                              "HistogramRms": "HistogramRms", "HistogramSdev": "HistogramSdev",
+                              "HistogramTop": "HistogramTop", "HParamScript": "HParamScript",
+                              "I2StoValue": "I2StoValue", "LastPoint": "LastPoint",
+                              "LevelAtX": "LevelAtX", "LocalBase": "LocalBase",
+                              "LocalBaselineSeparation": "LocalBaselineSeparation",
+                              "LocalMaximum": "LocalMaximum", "LocalMinimum": "LocalMinimum",
+                              "LecroyWR606ZiLocalNumber": "LocalNumber",
+                              "LocalPeakToPeak": "LocalPeakToPeak",
+                              "LocalTimeAtMaximum": "LocalTimeAtMaximum",
+                              "LocalTimeAtMinimum": "LocalTimeAtMinimum",
+                              "LocalTimeBetweenEvent": "LocalTimeBetweenEvent",
+                              "LocalTimeBetweenPeaks": "LocalTimeBetweenPeaks",
+                              "LocalTimeBetweenTroug": "LocalTimeBetweenTroug",
+                              "LocalTimeOverThreshold": "LocalTimeOverThreshold",
+                              "LocalTimePeakToTrough": "LocalTimePeakToTrough",
+                              "LocalTimeTroughToPeak": "LocalTimeTroughToPeak",
+                              "LocalTimeUnderThreshol": "LocalTimeUnderThreshol",
+                              "MathcadParam": "MathcadParam", "MATLABParameter": "MATLABParameter",
+                              "MaximumPopulation": "MaximumPopulation", "Median": "Median",
+                              "Mode": "Mode", "NarrowBandPhase": "NarrowBandPhase",
+                              "NarrowBandPower": "NarrowBandPower", "NCycleJitter": "NCycleJitter",
+                              "NonLinearTransitionShift": "NonLinearTransitionShift",
+                              "npoints": "npoints", "Null": "Null", "NumberOfModes": "NumberOfModes",
+                              "Overwrite": "Overwrite", "ParamScript": "ParamScript",
+                              "PEAKMAG": "PEAKMAG", "Peaks": "Peaks", "Percentile": "Percentile",
+                              "PeriodAtLevel": "PeriodAtLevel", "PopulationAtX": "PopulationAtX",
+                              "PowerFactor": "PowerFactor", "Protocol2Analog": "Protocol2Analog",
+                              "Protocol2Protocol": "Protocol2Protocol",
+                              "Protocol2Value": "Protocol2Value", "ProtocolBitrate": "ProtocolBitrate",
+                              "ProtocolLoad": "ProtocolLoad",
+                              "ProtocolNumMessages": "ProtocolNumMessages", "PW50": "PW50",
+                              "PW50Negative": "PW50Negative", "PW50Positive": "PW50Positive",
+                              "Range": "Range", "RealPower": "RealPower", "Resolution": "Resolution",
+                              "Rise2080": "Rise2080", "RiseAtLevel": "RiseAtLevel", "SAS": "SAS",
+                              "Slew": "Slew", "StandardDeviation": "StandardDeviation", "TAA": "TAA",
+                              "TAANegative": "TAANegative", "TAAPositive": "TAAPositive", "TIE": "TIE",
+                              "TimeAtCAN": "TimeAtCAN", "TimeAtLevel": "TimeAtLevel",
+                              "TimeAtProtocol": "TimeAtProtocol", "TotalPopulation": "TotalPopulation",
+                              "timetUpS": "tUpS", "WidthAtLevel": "WidthAtLevel",
+                              "XAtMaximum": "XAtMaximum", "XAtMinimum": "XAtMinimum", "XAtPeak": "XAtPeak"
+                              }
 
     ch_1 = Instrument.ChannelCreator(LecroyWR606ZiChannel, 1)
 
@@ -1033,12 +1147,11 @@ class LecroyWR606Zi(TeledyneOscilloscope):
 
     measurement_type = Instrument.setting(
         "VBS 'app.Measure.P%d.ParamEngine=\"%s\"'",
-        """Control the parameter (measurement on a trace) for Px.
-        This setting applies only if the MeasurementType control is set to "measure".
+        """Set the parameter (measurement on a trace) for Px.
+        This setting applies only if the measurement_mode control is set to "MyMeasure".
         """,
         validator=_measurement_add_validator,
-        values=[[1, 8], _measurable_parameters],
-        check_set_errors=True,
+        values=[[1, 8], measurable_parameters],
     )
 
     def measurement_result_curracq(self, slot):
@@ -1097,7 +1210,6 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         source1 = self.ANALOG_TRIGGER_SOURCE[source1]
         source2 = strict_discrete_set(source2, self.ANALOG_TRIGGER_SOURCE)
         source2 = self.ANALOG_TRIGGER_SOURCE[source2]
-        meas_type = strict_discrete_set(meas_type, self._measurable_parameters)
         self.write(f"VBS 'app.Measure.P{slot}.View=True'")
         self.write(f"VBS 'app.Measure.ShowMeasure=True'")
         self.write(f"VBS 'app.Measure.P{slot}.Source1=\"{source1}\"'")
