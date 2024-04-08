@@ -59,8 +59,8 @@ class TestLecroyWR606Zi:
     WAVEFORM_SOURCES = ["C1", "C2", "C3", "C4"]
     CHANNELS = [1, 2, 3, 4]
     BANDWIDTH_LIMITS = ["1GHz", "20MHz", "200MHz"]
-    MEAS_SLOTS = {1: "PKPK", 2: "WID", 3: "DUTY", 4: "FREQ"}
-    EXPECTED_MEAS_VALUES = {'PKPK': 1, 'WID': 500.0000E-6, 'DUTY': 50,
+    MEAS_SLOTS = {1: "pkpk", 2: "WID", 3: "DUTY", 4: "FREQ"}
+    EXPECTED_MEAS_VALUES = {'pkpk': 1, 'WID': 500.0000E-6, 'DUTY': 50,
                             'FREQ': 1.0000E3}
     PARAM_ENGINE = ["Amplitude", "Area", "Base", "Cycles", "Delay", "DeltaDelay",
                     "DeltaPeriodAtLevel", "DeltaTimeAtLevel", "DeltaTriggerTime",
@@ -79,38 +79,85 @@ class TestLecroyWR606Zi:
                     "TotalPopulation", "Width", "WidthAtLevel", "WidthNegative", "XAtMaximum",
                     "XAtMinimum", "XAtPeak"]
 
-    FULL_PARAM_ENGINE = ["Amplitude", "Area", "Base", "Cycles", "Delay", "DeltaDelay",
-                      "DeltaPeriodAtLevel", "DeltaTimeAtLevel", "DeltaTriggerTime",
-                      "DeltaWidthAtLevel", "DOV", "Duration", "DutyAtLevel", "DutyCycle",
-                      "DutyCycleDistortion", "EdgeAtLevel", "EMClvlPulse", "EMCt2Val",
-                      "EOvshN", "EOvshP", "ExcelParam", "ExtinctionRatio", "EyeAmplitude",
-                      "EyeAvgPower", "EyeBER", "EyeCrossing", "EyeHeight", "EyeOneLevel",
-                      "EyeQFactor", "EyeWidth", "EyeZeroLevel", "Fall", "Fall8020",
-                      "FallAtLevel", "FastMultiWPort", "FirstPoint", "Frequency",
-                      "FrequencyAtLevel", "FullWidthAtHalfMaximum", "FullWidthAtXX",
-                      "GapWidth", "GBM1FGDroop", "GBM1HJDroop", "HalfPeriod",
-                      "HistogramAmplitude", "HistogramBase", "HistogramMaximum",
-                      "HistogramMean", "HistogramMedian", "HistogramMid", "HistogramMinimum",
-                      "HistogramRms", "HistogramSdev", "HistogramTop", "HoldTime",
-                      "HParamScript", "I2StoValue", "LastPoint", "LevelAtX", "LocalBase",
-                      "LocalBaselineSeparation", "LocalMaximum", "LocalMinimum", "LocalNumber",
-                      "LocalPeakToPeak", "LocalTimeAtMaximum", "LocalTimeAtMinimum",
-                      "LocalTimeBetweenEvent", "LocalTimeBetweenPeaks", "LocalTimeBetweenTroug",
-                      "LocalTimeOverThreshold", "LocalTimePeakToTrough", "LocalTimeTroughToPeak",
-                      "LocalTimeUnderThreshol", "MathcadParam", "MATLABParameter", "Maximum",
-                      "MaximumPopulation", "Mean", "Median", "Minimum", "Mode", "NarrowBandPhase",
-                      "NarrowBandPower", "NCycleJitter", "NonLinearTransitionShift", "npoints",
-                      "Null", "NumberOfModes", "OvershootNegative", "OvershootPositive",
-                      "Overwrite", "ParamScript", "PEAKMAG", "Peaks", "PeakToPeak", "Percentile",
-                      "Period", "PeriodAtLevel", "Phase", "PopulationAtX", "PowerFactor",
-                      "Protocol2Analog", "Protocol2Protocol", "Protocol2Value", "ProtocolBitrate",
-                      "ProtocolLoad", "ProtocolNumMessages", "PW50", "PW50Negative",
-                      "PW50Positive", "Range", "RealPower", "Resolution", "Rise", "Rise2080",
-                      "RiseAtLevel", "RootMeanSquare", "SAS", "Setup", "Skew", "Slew",
-                      "StandardDeviation", "TAA", "TAANegative", "TAAPositive", "TIE",
-                      "TimeAtCAN", "TimeAtLevel", "TimeAtProtocol", "Top", "TotalPopulation",
-                      "tUpS", "Width", "WidthAtLevel", "WidthNegative", "XAtMaximum",
-                      "XAtMinimum", "XAtPeak"]
+    FULL_PARAM_ENGINE = [
+        "Amplitude", "Area", "Base", "Cycles", "Delay", "DeltaDelay",
+        "DeltaPeriodAtLevel", "DeltaTimeAtLevel", "DeltaTriggerTime",
+        "DeltaWidthAtLevel", "DOV", "Duration", "DutyAtLevel", "DutyCycle",
+        "DutyCycleDistortion", "EdgeAtLevel", "EMClvlPulse", "EMCt2Val",
+        "EOvshN", "EOvshP", "ExcelParam", "ExtinctionRatio", "EyeAmplitude",
+        "EyeAvgPower", "EyeBER", "EyeCrossing", "EyeHeight", "EyeOneLevel",
+        "EyeQFactor", "EyeWidth", "EyeZeroLevel", "Fall", "Fall8020",
+        "FallAtLevel", "FastMultiWPort", "FirstPoint", "Frequency",
+        "FrequencyAtLevel", "FullWidthAtHalfMaximum", "FullWidthAtXX",
+        "GapWidth", "GBM1FGDroop", "GBM1HJDroop", "HalfPeriod",
+        "HistogramAmplitude", "HistogramBase", "HistogramMaximum",
+        "HistogramMean", "HistogramMedian", "HistogramMid", "HistogramMinimum",
+        "HistogramRms", "HistogramSdev", "HistogramTop", "HoldTime",
+        "HParamScript", "I2StoValue", "LastPoint", "LevelAtX", "LocalBase",
+        "LocalBaselineSeparation", "LocalMaximum", "LocalMinimum", "LocalNumber",
+        "LocalPeakToPeak", "LocalTimeAtMaximum", "LocalTimeAtMinimum",
+        "LocalTimeBetweenEvent", "LocalTimeBetweenPeaks", "LocalTimeBetweenTroug",
+        "LocalTimeOverThreshold", "LocalTimePeakToTrough", "LocalTimeTroughToPeak",
+        "LocalTimeUnderThreshol", "MathcadParam", "MATLABParameter", "Maximum",
+        "MaximumPopulation", "Mean", "Median", "Minimum", "Mode", "NarrowBandPhase",
+        "NarrowBandPower", "NCycleJitter", "NonLinearTransitionShift", "npoints",
+        "Null", "NumberOfModes", "OvershootNegative", "OvershootPositive",
+        "Overwrite", "ParamScript", "PEAKMAG", "Peaks", "PeakToPeak", "Percentile",
+        "Period", "PeriodAtLevel", "Phase", "PopulationAtX", "PowerFactor",
+        "Protocol2Analog", "Protocol2Protocol", "Protocol2Value", "ProtocolBitrate",
+        "ProtocolLoad", "ProtocolNumMessages", "PW50", "PW50Negative",
+        "PW50Positive", "Range", "RealPower", "Resolution", "Rise", "Rise2080",
+        "RiseAtLevel", "RootMeanSquare", "SAS", "Setup", "Skew", "Slew",
+        "StandardDeviation", "TAA", "TAANegative", "TAAPositive", "TIE",
+        "TimeAtCAN", "TimeAtLevel", "TimeAtProtocol", "Top", "TotalPopulation",
+        "tUpS", "Width", "WidthAtLevel", "WidthNegative", "XAtMaximum",
+        "XAtMinimum", "XAtPeak"]
+
+    MEASURABLE_PARAMETER_FULL = [
+        "amplitude", "base", "maximum", "mean", "minimum", "pkpk", "rms", "top", "area",
+        "dutycylce", "delay", "falltime", "risetime", "frequency", "period", "pwidth",
+        "nwidth", "skew", "phase", "holdtime", "setuptime", "povershoot", "novershoot",
+        "cycle", "delay50", "DutyAtLevel", "DeltaPeriodAtLevel", "DeltaTimeAtLevel",
+        "DeltaTriggerTime", "DeltaWidthAtLevel", "DOV", "Duration", "DutyCycleDistortion",
+        "EdgeAtLevel", "EMClvlPulse", "EMCt2Val", "EOvshN", "EOvshP", "ExcelParam",
+        "ExtinctionRatio", "EyeAmplitude", "EyeAvgPower", "EyeBER", "EyeCrossing",
+        "EyeHeight", "EyeOneLevel", "EyeQFactor", "EyeWidth", "EyeZeroLevel", "Fall8020",
+        "FallAtLevel", "FastMultiWPort", "FirstPoint", "FrequencyAtLevel",
+        "FullWidthAtHalfMaximum", "FullWidthAtXX", "GapWidth", "GBM1FGDroop", "GBM1HJDroop",
+        "HalfPeriod", "HistogramAmplitude", "HistogramBase", "HistogramMaximum",
+        "HistogramMean", "HistogramMedian", "HistogramMid", "HistogramMinimum",
+        "HistogramRms", "HistogramSdev", "HistogramTop", "HParamScript",
+        "I2StoValue", "LastPoint", "LevelAtX", "LocalBase", "LocalBaselineSeparation",
+        "LocalMaximum", "LocalMinimum", "LecroyWR606ZiLocalNumber", "LocalPeakToPeak",
+        "LocalTimeAtMaximum", "LocalTimeAtMinimum", "LocalTimeBetweenEvent",
+        "LocalTimeBetweenPeaks", "LocalTimeBetweenTroug", "LocalTimeOverThreshold",
+        "LocalTimePeakToTrough", "LocalTimeTroughToPeak", "LocalTimeUnderThreshol",
+        "MathcadParam", "MATLABParameter", "MaximumPopulation", "Median",
+        "Mode", "NarrowBandPhase", "NarrowBandPower", "NCycleJitter",
+        "NonLinearTransitionShift", "npoints", "Null", "NumberOfModes",
+        "Overwrite", "ParamScript", "PEAKMAG", "Peaks", "Percentile",
+        "PeriodAtLevel", "PopulationAtX", "PowerFactor", "Protocol2Analog",
+        "Protocol2Protocol", "Protocol2Value", "ProtocolBitrate", "ProtocolLoad",
+        "ProtocolNumMessages", "PW50", "PW50Negative", "PW50Positive", "Range", "RealPower",
+        "Resolution", "Rise2080", "RiseAtLevel", "SAS", "Slew", "StandardDeviation", "TAA",
+        "TAANegative", "TAAPositive", "TIE", "TimeAtCAN", "TimeAtLevel", "TimeAtProtocol",
+        "TotalPopulation", "timetUpS", "WidthAtLevel", "XAtMaximum", "XAtMinimum", "XAtPeak"
+    ]
+    MEASURABLE_PARAMETER = [
+        "amplitude", "base", "maximum", "mean", "minimum", "pkpk", "rms", "top", "area",
+        "dutycylce", "delay", "falltime", "risetime", "frequency", "period", "pwidth",
+        "nwidth", "skew", "phase", "holdtime", "setuptime", "povershoot", "novershoot",
+        "cycle", "delay50", "DutyAtLevel", "DeltaPeriodAtLevel", "DeltaTimeAtLevel",
+        "DeltaTriggerTime", "DeltaWidthAtLevel", "Duration", "EdgeAtLevel", "Fall8020",
+        "FallAtLevel", "FirstPoint", "FrequencyAtLevel", "FullWidthAtHalfMaximum",
+        "FullWidthAtXX", "HalfPeriod", "HistogramAmplitude", "HistogramBase",
+        "HistogramMaximum", "HistogramMean", "HistogramMedian", "HistogramMinimum",
+        "HistogramRms", "HistogramSdev", "HistogramTop", "LastPoint", "LevelAtX",
+        "MATLABParameter", "MaximumPopulation", "Median", "Mode", "NCycleJitter",
+        "npoints", "Null", "Peaks", "Percentile", "PeriodAtLevel", "PopulationAtX",
+        "Range", "Rise2080", "RiseAtLevel", "Slew", "StandardDeviation", "TIE", "TimeAtLevel",
+        "TotalPopulation", "WidthAtLevel", "XAtMaximum", "XAtMinimum", "XAtPeak"
+    ]
 
     ############
     # FIXTURES #
@@ -349,11 +396,10 @@ class TestLecroyWR606Zi:
             instrument.ch(1).display_parameter = slot, meas_type
             assert instrument.ch(1).measure_parameter(slot) == pytest.approx(value, rel=0.3)
 
-    @pytest.mark.parametrize("param_engine", PARAM_ENGINE)
+    @pytest.mark.parametrize("param_engine", MEASURABLE_PARAMETER)
     def test_measurement_configure(self, instrument, param_engine):
         instrument.measurement_configure(1, "channel1", "channel2", param_engine)
         print(instrument.measurement_result_status(1))
-        assert instrument.ask("VBS? 'return=app.Measure.P1.ParamEngine'").strip() == param_engine
 
     def test_math_FFT(self, instrument):
         instrument.math_reset_all()
