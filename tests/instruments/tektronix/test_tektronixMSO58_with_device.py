@@ -254,12 +254,12 @@ class TestTektronixMSO58:
     def test_download_image(self, instrument):
         img = instrument.download_image()
         assert type(img) is bytearray
-        # dt = datetime.now()
-        # fileName = dt.strftime("C:\\Temp\\TEKTRONIX_%Y%m%d_%H%M%S.png")
-        # # Save image data to local disk
-        # file = open(fileName, "wb")
-        # file.write(img)
-        # file.close()
+        dt = datetime.now()
+        fileName = dt.strftime("C:\\Temp\\TEKTRONIX_%Y%m%d_%H%M%S.png")
+        # Save image data to local disk
+        file = open(fileName, "wb")
+        file.write(img)
+        file.close()
         print(img)
 
     # Measurement
