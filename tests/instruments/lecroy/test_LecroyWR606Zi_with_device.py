@@ -23,6 +23,7 @@
 #
 
 from time import sleep
+from datetime import datetime
 from unittest.mock import ANY
 
 import numpy as np
@@ -381,7 +382,12 @@ class TestLecroyWR606Zi:
     def test_download_image_default_arguments(self, instrument):
         img = instrument.download_image()
         assert type(img) is bytearray
-        # assert pytest.approx(len(img), 0.1) == 144142
+        dt = datetime.now()
+        fileName = dt.strftime("C:\\Temp\\LECROY_%Y%m%d_%H%M%S.BMP")
+        # Save image data to local disk
+        file = open(fileName, "wb")
+        file.write(img)
+        file.close()
 
     # Measurement
 
