@@ -23,7 +23,6 @@
 
 import logging
 from enum import IntFlag
-from datetime import datetime
 from abc import ABCMeta
 
 from pymeasure.instruments import Instrument, Channel
@@ -1080,12 +1079,6 @@ class LecroyWR606Zi(TeledyneOscilloscope):
                             filename="screenshot", portname="NET")
         self.write("SCDP")
         img = self.read_bytes(count=-1, break_on_termchar=True)
-        dt = datetime.now()
-        fileName = dt.strftime("C:\\Temp\\LECROY_%Y%m%d_%H%M%S.BMP")
-        # Save image data to local disk
-        file = open(fileName, "wb")
-        file.write(img)
-        file.close()
         return bytearray(img)
 
     ###############
