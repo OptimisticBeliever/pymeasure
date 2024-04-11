@@ -524,7 +524,7 @@ class LecroyOscilloscopeMathChannel(Channel, metaclass=ABCMeta):
 
         """,
         validator=_math_define_validator,
-        values=[["C1", "C2", "C3", "C4"], ["*", "/", "+", "-"], ["C1", "C2", "C3", "C4"]]
+        values=[["C1", "C2", "C3", "C4"], ["*", "/", "+", "-"], ["C1", "C2", "C3", "C4"]],
     )
 
     math_view = Instrument.control(
@@ -645,6 +645,34 @@ class LecroyOscilloscopeMathChannel(Channel, metaclass=ABCMeta):
         will be continuously variable.""",
         validator=strict_range,
         values=[0.1, 100],
+    )
+
+    math_zoom_vertical_scale = Instrument.control(
+        "VBS? 'return=app.Math.F{ch}.Zoom.VerScale'",
+        "VBS 'app.Math.F{ch}.Zoom.VerScale=\"%f\"'",
+        """Control the vertical scale (units per division).
+        """,
+    )
+
+    math_zoom_vertical_center = Instrument.control(
+        "VBS? 'return=app.Math.F{ch}.Zoom.VerCenter'",
+        "VBS 'app.Math.F{ch}.Zoom.VerCenter=\"%f\"'",
+        """Control the vertical center.
+        """,
+    )
+
+    math_zoom_horizontal_scale = Instrument.control(
+        "VBS? 'return=app.Math.F{ch}.Zoom.HorScale'",
+        "VBS 'app.Math.F{ch}.Zoom.HorScale=\"%f\"'",
+        """Control the horizontal scale (units per division).
+        """,
+    )
+
+    math_zoom_horizontal_center = Instrument.control(
+        "VBS? 'return=app.Math.F{ch}.Zoom.HorCenter'",
+        "VBS 'app.Math.F{ch}.Zoom.HorCenter=\"%f\"'",
+        """Control the horizontal center.
+        """,
     )
 
     math_operator1_average_type = Instrument.control(
