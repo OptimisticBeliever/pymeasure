@@ -24,9 +24,7 @@
 
 from time import sleep
 from datetime import datetime
-from unittest.mock import ANY
 
-import numpy as np
 import pytest
 from pyvisa.errors import VisaIOError
 
@@ -383,9 +381,9 @@ class TestLecroyWR606Zi:
         img = instrument.download_image()
         assert type(img) is bytearray
         dt = datetime.now()
-        fileName = dt.strftime("C:\\Temp\\LECROY_%Y%m%d_%H%M%S.BMP")
+        flie_name = dt.strftime("C:\\Temp\\LECROY_%Y%m%d_%H%M%S.BMP")
         # Save image data to local disk
-        file = open(fileName, "wb")
+        file = open(flie_name, "wb")
         file.write(img)
         file.close()
 
@@ -407,14 +405,17 @@ class TestLecroyWR606Zi:
         instrument.measurement_configure(1, "channel1", "channel2", param_engine)
         print(instrument.measurement_result_status(1))
 
-    def test_math_FFT(self, instrument):
+    def test_math_fft(self, instrument):
         instrument.math_reset_all()
         instrument.f1.math_view = True
-        instrument.f1.math_mode = "TwoOperators"
+        instrument.f1.math_mode = "OneOperator"
         instrument.f1.math_source1 = "C1"
         instrument.f1.math_source2 = "C2"
         instrument.f1.math_operator1 = "FFT"
-        instrument.f1.math_operator2 = "Average"
-        instrument.f1.math_operator2_sweeps = 10
+        # instrument.f1.math_operator2 = "Average"
+        # instrument.f1.math_operator2_sweeps = 10
         instrument.f1.math_operator1_FFT_output_type = "PowerSpectrum"
         instrument.f1.math_operator1_FFT_window_type = "Hamming"
+
+    def test_math_define(self, instrument):
+        instrument.f8.math_define = ("CH1", "+", "CH2")
