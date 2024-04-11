@@ -245,6 +245,7 @@ measurable_parameters_full = {
     "XAtMaximum": "XAtMaximum", "XAtMinimum": "XAtMinimum", "XAtPeak": "XAtPeak"
                               }
 
+
 def _math_define_validator(value, values):
     """
     Validate the input of the math_define property
@@ -805,46 +806,46 @@ class LecroyWR606Zi(TeledyneOscilloscope):
                               'D32', 'D33', 'D34', 'D35']
 
     measurable_parameters = {"amplitude": "Amplitude", "base": "Base", "maximum": "Maximum",
-                              "mean": "Mean", "minimum": "Minimum", "pkpk": "PeakToPeak",
-                              "rms": "RootMeanSquare", "top": "Top", "area": "Area",
-                              "dutycylce": "DutyCycle", "delay": "DeltaDelay", "falltime": "Fall",
-                              "risetime": "Rise", "frequency": "Frequency", "period": "Period",
-                              "pwidth": "Width", "nwidth": "WidthNegative", "skew": "Skew",
-                              "phase": "Phase", "holdtime": "HoldTime", "setuptime": "Setup",
-                              "povershoot": "OvershootPositive", "novershoot": "OvershootNegative",
-                              "cycle": "Cycles", "delay50": "Delay", "DutyAtLevel": "DutyAtLevel",
-                              "DeltaPeriodAtLevel": "DeltaPeriodAtLevel",
-                              "DeltaTimeAtLevel": "DeltaTimeAtLevel",
-                              "DeltaTriggerTime": "DeltaTriggerTime",
-                              "DeltaWidthAtLevel": "DeltaWidthAtLevel",
-                              "DOV": "DOV", "Duration": "Duration",
-                              "DutyCycleDistortion": "DutyCycleDistortion",
-                              "EdgeAtLevel": "EdgeAtLevel", "EMClvlPulse": "EMClvlPulse",
-                              "EMCt2Val": "EMCt2Val", "EOvshN": "EOvshN", "EOvshP": "EOvshP",
-                              "ExcelParam": "ExcelParam", "ExtinctionRatio": "ExtinctionRatio",
-                              "EyeAmplitude": "EyeAmplitude", "EyeAvgPower": "EyeAvgPower",
-                              "EyeBER": "EyeBER", "EyeCrossing": "EyeCrossing",
-                              "EyeHeight": "EyeHeight", "EyeOneLevel": "EyeOneLevel",
-                              "EyeQFactor": "EyeQFactor", "EyeWidth": "EyeWidth",
-                              "EyeZeroLevel": "EyeZeroLevel", "Fall8020": "Fall8020",
-                              "FallAtLevel": "FallAtLevel", "FastMultiWPort": "FastMultiWPort",
-                              "FirstPoint": "FirstPoint", "FrequencyAtLevel": "FrequencyAtLevel",
-                              "FullWidthAtHalfMaximum": "FullWidthAtHalfMaximum",
-                              "FullWidthAtXX": "FullWidthAtXX", "GapWidth": "GapWidth",
-                              "GBM1FGDroop": "GBM1FGDroop", "GBM1HJDroop": "GBM1HJDroop",
-                              "HalfPeriod": "HalfPeriod", "HistogramAmplitude": "HistogramAmplitude",
-                              "HistogramBase": "HistogramBase", "HistogramMaximum": "HistogramMaximum",
-                              "HistogramMean": "HistogramMean", "HistogramMedian": "HistogramMedian",
-                              "HistogramMid": "HistogramMid", "HistogramMinimum": "HistogramMinimum",
-                              "HistogramRms": "HistogramRms", "HistogramSdev": "HistogramSdev",
-                              "HistogramTop": "HistogramTop", "HParamScript": "HParamScript",
-                              "I2StoValue": "I2StoValue", "LastPoint": "LastPoint",
-                              "LevelAtX": "LevelAtX", "LocalBase": "LocalBase",
-                              "LocalBaselineSeparation": "LocalBaselineSeparation",
-                              "LocalMaximum": "LocalMaximum", "LocalMinimum": "LocalMinimum",
-                              "LecroyWR606ZiLocalNumber": "LocalNumber",
-                              "LocalPeakToPeak": "LocalPeakToPeak",
-                              "LocalTimeAtMaximum": "LocalTimeAtMaximum",
+                             "mean": "Mean", "minimum": "Minimum", "pkpk": "PeakToPeak",
+                             "rms": "RootMeanSquare", "top": "Top", "area": "Area",
+                             "dutycylce": "DutyCycle", "delay": "DeltaDelay", "falltime": "Fall",
+                             "risetime": "Rise", "frequency": "Frequency", "period": "Period",
+                             "pwidth": "Width", "nwidth": "WidthNegative", "skew": "Skew",
+                             "phase": "Phase", "holdtime": "HoldTime", "setuptime": "Setup",
+                             "povershoot": "OvershootPositive", "novershoot": "OvershootNegative",
+                             "cycle": "Cycles", "delay50": "Delay", "DutyAtLevel": "DutyAtLevel",
+                             "DeltaPeriodAtLevel": "DeltaPeriodAtLevel",
+                             "DeltaTimeAtLevel": "DeltaTimeAtLevel",
+                             "DeltaTriggerTime": "DeltaTriggerTime",
+                             "DeltaWidthAtLevel": "DeltaWidthAtLevel",
+                             "DOV": "DOV", "Duration": "Duration",
+                             "DutyCycleDistortion": "DutyCycleDistortion",
+                             "EdgeAtLevel": "EdgeAtLevel", "EMClvlPulse": "EMClvlPulse",
+                             "EMCt2Val": "EMCt2Val", "EOvshN": "EOvshN", "EOvshP": "EOvshP",
+                             "ExcelParam": "ExcelParam", "ExtinctionRatio": "ExtinctionRatio",
+                             "EyeAmplitude": "EyeAmplitude", "EyeAvgPower": "EyeAvgPower",
+                             "EyeBER": "EyeBER", "EyeCrossing": "EyeCrossing",
+                             "EyeHeight": "EyeHeight", "EyeOneLevel": "EyeOneLevel",
+                             "EyeQFactor": "EyeQFactor", "EyeWidth": "EyeWidth",
+                             "EyeZeroLevel": "EyeZeroLevel", "Fall8020": "Fall8020",
+                             "FallAtLevel": "FallAtLevel", "FastMultiWPort": "FastMultiWPort",
+                             "FirstPoint": "FirstPoint", "FrequencyAtLevel": "FrequencyAtLevel",
+                             "FullWidthAtHalfMaximum": "FullWidthAtHalfMaximum",
+                             "FullWidthAtXX": "FullWidthAtXX", "GapWidth": "GapWidth",
+                             "GBM1FGDroop": "GBM1FGDroop", "GBM1HJDroop": "GBM1HJDroop",
+                             "HalfPeriod": "HalfPeriod", "HistogramAmplitude": "HistogramAmplitude",
+                             "HistogramBase": "HistogramBase", "HistogramMaximum": "HistogramMaximum",
+                             "HistogramMean": "HistogramMean", "HistogramMedian": "HistogramMedian",
+                             "HistogramMid": "HistogramMid", "HistogramMinimum": "HistogramMinimum",
+                             "HistogramRms": "HistogramRms", "HistogramSdev": "HistogramSdev",
+                             "HistogramTop": "HistogramTop", "HParamScript": "HParamScript",
+                             "I2StoValue": "I2StoValue", "LastPoint": "LastPoint",
+                             "LevelAtX": "LevelAtX", "LocalBase": "LocalBase",
+                             "LocalBaselineSeparation": "LocalBaselineSeparation",
+                             "LocalMaximum": "LocalMaximum", "LocalMinimum": "LocalMinimum",
+                             "LecroyWR606ZiLocalNumber": "LocalNumber",
+                             "LocalPeakToPeak": "LocalPeakToPeak",
+                             "LocalTimeAtMaximum": "LocalTimeAtMaximum",
                               "LocalTimeAtMinimum": "LocalTimeAtMinimum",
                               "LocalTimeBetweenEvent": "LocalTimeBetweenEvent",
                               "LocalTimeBetweenPeaks": "LocalTimeBetweenPeaks",
@@ -876,7 +877,7 @@ class LecroyWR606Zi(TeledyneOscilloscope):
                               "TimeAtProtocol": "TimeAtProtocol", "TotalPopulation": "TotalPopulation",
                               "timetUpS": "tUpS", "WidthAtLevel": "WidthAtLevel",
                               "XAtMaximum": "XAtMaximum", "XAtMinimum": "XAtMinimum", "XAtPeak": "XAtPeak"
-                              }
+                             }
 
     ch_1 = Instrument.ChannelCreator(LecroyWR606ZiChannel, 1)
 
@@ -964,6 +965,33 @@ class LecroyWR606Zi(TeledyneOscilloscope):
     )
 
     ##################
+    # Utilities      #
+    ##################
+
+    def clear(self):
+        """Clears all accumulated sweeps for all subsystems.
+        These include Channel Pre-Processing, Math, Measure, and Display Persistence.
+        Note that subsystem-specific clear sweeps controls are also available.
+        For the details please refer to the ClearSweeps control for each subsystem."""
+        self.write("VBS 'app.ClearSweeps'")
+
+    def set_default_setup(self) -> None:
+        """Restores the instrument setup to its default state.
+        Note that certain settings will not be restored to the default state.
+        These are the user preferences, such as the current remote communications port, and
+        the color settings, which may be reset, if required, using the ResetPreferences action."""
+        self.write("VBS 'app.SetToDefaultSetup'")
+
+    def wait_until_idle(self, timeout: float) -> None:
+        """Waits until either the application is idle or the specified timeout expires,
+        specified in seconds. This evaluates to True if the application completes before
+        the timeout expires, and to False if a timeout occurs.
+        When Trigger mode is Auto or Run, the application is never Idle.
+        In this case the call to WaitUntilIdle returns after the next acquisition
+        and any configured processing."""
+        self.write(f'VBS \'app.WaitUntilIdle({timeout})\'')
+
+    ##################
     # Timebase Setup #
     ##################
 
@@ -1043,6 +1071,14 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         "VBS? 'return=app.Acquisition.Horizontal.SamplingRate",
         """Get the sample rate of the scope."""
     )
+
+    def acquisition_clear_sweeps(self) -> None:
+        """Resets any accumulated average data or persistence data for channel waveforms (C1..C4).
+        Valid only when one or more channels have waveform averaging or persistence enabled
+        in their pre-processing settings.
+        Note that an average may be reset on an individual basis using
+        app.Acquisition.Cx.ClearSweeps control."""
+        self.write("VBS 'app.Acquisition.ClearSweeps'")
 
     ##################
     #    Waveform    #
@@ -1218,6 +1254,11 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         """Resets all parameter setups, turning each of the parameters view to off
         the MeasurementType to measure and the selected paramEngine to Null."""
         self.write("VBS 'app.Measure.ClearAll'")
+
+    def measurement_clear_sweeps(self):
+        """Clears the accumulated statistics for parameters P1 to P8
+        as well as the acumulated statistics for their associated histicons."""
+        self.write("VBS 'app.Measure.ClearSweeps'")
 
     def measurement_configure(self, slot: int, source1, source2, meas_type):
         """Configure the measurement
