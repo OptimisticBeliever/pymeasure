@@ -407,15 +407,19 @@ class TestLecroyWR606Zi:
 
     def test_math_fft(self, instrument):
         instrument.math_reset_all()
+        instrument.f1.math_zoom_reset()
         instrument.f1.math_view = True
+        assert instrument.f1.math_view == True
         instrument.f1.math_mode = "OneOperator"
+        assert instrument.f1.math_mode == "OneOperator"
         instrument.f1.math_source1 = "C1"
-        instrument.f1.math_source2 = "C2"
+        assert instrument.f1.math_source1 == "C1"
         instrument.f1.math_operator1 = "FFT"
-        # instrument.f1.math_operator2 = "Average"
-        # instrument.f1.math_operator2_sweeps = 10
+        assert instrument.f1.math_operator1 == "FFT"
         instrument.f1.math_operator1_FFT_output_type = "PowerSpectrum"
+        assert instrument.f1.math_operator1_FFT_output_type == "PowerSpectrum"
         instrument.f1.math_operator1_FFT_window_type = "Hamming"
+        assert instrument.f1.math_operator1_FFT_window_type == "Hamming"
 
     def test_math_define(self, instrument):
         instrument.f8.math_define = ("CH1", "+", "CH2")
