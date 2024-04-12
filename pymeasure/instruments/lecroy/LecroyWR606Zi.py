@@ -536,7 +536,7 @@ class LecroyOscilloscopeMathChannel(Channel, metaclass=ABCMeta):
         but are being used as inputs to other math functions and/or measurements,
         they are computed.""",
         validator=strict_discrete_set,
-        values={True: 1, False: 0},
+        values={True: -1, False: 0},
         map_values=True,
     )
 
@@ -675,6 +675,10 @@ class LecroyOscilloscopeMathChannel(Channel, metaclass=ABCMeta):
         """Control the horizontal center.
         """,
     )
+
+    def math_zoom_reset(self) -> None:
+        """Resets the zoom settings to their default values."""
+        self.write("VBS 'app.Math.F{ch}.Zoom.ResetZoom")
 
     math_operator1_average_type = Instrument.control(
         "VBS? 'return=app.Math.F{ch}.Operator1Setup.AverageType'",
