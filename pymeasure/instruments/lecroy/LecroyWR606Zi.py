@@ -1145,7 +1145,7 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         self.hardcopy_setup(device="BMP", format="LANDSCAPE", background="BW",
                             destination="REMOTE", area="FULLSCREEN", directory="C:\\Temp",
                             filename="screenshot", portname="NET")
-        self.write("SCDP")
+        self.write("SCDP;*WAI")
         img = self.read_bytes(count=-1, break_on_termchar=True)
         return bytearray(img)
 
