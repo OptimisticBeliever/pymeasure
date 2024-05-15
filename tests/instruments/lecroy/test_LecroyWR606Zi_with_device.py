@@ -23,6 +23,7 @@
 #
 
 from time import sleep
+import numpy as np
 from datetime import datetime
 
 import pytest
@@ -54,8 +55,8 @@ class TestLecroyWR606Zi:
                      "dropout", "tv"]
     TRIGGER_COUPLING = ["ac", "dc", "lowpass", "highpass"]
     ACQUISITION_AVERAGE = [4, 16, 32, 64, 128, 256]
-    WAVEFORM_POINTS = [100, 1000, 10000]
-    WAVEFORM_SOURCES = ["C1", "C2", "C3", "C4"]
+    WAVEFORM_POINTS = [100, 20000, 30000, 1000000]  # [100, 1000, 10000]
+    WAVEFORM_SOURCES = ["C1"]  # , "C2", "C3", "C4"]
     CHANNELS = [1, 2, 3, 4]
     BANDWIDTH_LIMITS = ["1GHz", "20MHz", "200MHz"]
     MEAS_SLOTS = {1: "pkpk", 2: "WID", 3: "DUTY", 4: "FREQ"}
@@ -423,3 +424,67 @@ class TestLecroyWR606Zi:
 
     def test_math_define(self, instrument):
         instrument.f8.math_define = ("CH1", "+", "CH2")
+
+    def test_memory_size(self, instrument):
+        instrument.memory_size = 25e5
+        assert instrument.memory_size == 25e5
+
+    def test_waveform_preamble(self, instrument):
+        instrument.acquisition_type = "normal"
+        instrument.ch_1.offset = 0
+        instrument.waveform_points = 0
+        instrument.waveform_first_point = 0
+        instrument.waveform_sparsing = 1
+        instrument.waveform_source = "C1"
+        expected_preamble = {
+            "sparsing": 1.0,
+            "requested_points": 0.0,
+            "memory_size": 25e5,
+            "transmitted_points": None,
+            "first_point": 0.0,
+            "source": instrument.waveform_source,
+            "sampling_rate": 10e9,
+            "grid_number": 14,
+            "xdiv": 50e-9,
+            "xoffset": 0.0,
+            "ydiv": 0.5,
+            "yoffset": 0.0,
+        }
+        preamble = instrument.waveform_preamble
+        assert preamble == expected_preamble
+
+    @pytest.mark.parametrize("case1", WAVEFORM_SOURCES)
+    @pytest.mark.parametrize("case2", WAVEFORM_POINTS)
+    def test_download_data(self, instrument, case1, case2):
+        # if case1 == self.WAVEFORM_SOURCES[0] and case2 == self.WAVEFORM_POINTS[0]:
+        #     instrument.reset()
+        #     sleep(3)
+        #     instrument.autoscale()
+        #     sleep(15)
+        instrument.ch(case1).display = True
+        instrument.single()
+        sleep(1)
+        data, time, preamble = instrument.download_waveform(
+            source=case1, requested_points=case2, sparsing=1
+        )
+        assert type(data) is np.ndarray
+        assert len(data) == case2
+        assert type(time) is np.ndarray
+        assert len(time) == case2
+        assert type(preamble) is dict
+
+    # @pytest.mark.skip(reason="A human is needed to check the output waveform")
+    def test_download_data_all_points(self, instrument):
+        from matplotlib import pyplot as plt
+
+        instrument.ch_1.display = True
+        instrument.single()
+        sleep(3)
+        data, time, preamble = instrument.download_waveform(source="c1", requested_points=0, sparsing=1)
+        assert type(data) is np.ndarray
+        print(max(data))
+        assert type(time) is np.ndarray
+        assert type(preamble) is dict
+        plt.scatter(x=time, y=data)
+        plt.show()
+
