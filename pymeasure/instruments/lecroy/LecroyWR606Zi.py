@@ -22,6 +22,9 @@
 # THE SOFTWARE.
 
 import logging
+import re
+import numpy as np
+from decimal import Decimal
 from enum import IntFlag
 from abc import ABCMeta
 
@@ -850,8 +853,8 @@ class LecroyWR606Zi(TeledyneOscilloscope):
                              "LecroyWR606ZiLocalNumber": "LocalNumber",
                              "LocalPeakToPeak": "LocalPeakToPeak",
                              "LocalTimeAtMaximum": "LocalTimeAtMaximum",
-                              "LocalTimeAtMinimum": "LocalTimeAtMinimum",
-                              "LocalTimeBetweenEvent": "LocalTimeBetweenEvent",
+                             "LocalTimeAtMinimum": "LocalTimeAtMinimum",
+                             "LocalTimeBetweenEvent": "LocalTimeBetweenEvent",
                               "LocalTimeBetweenPeaks": "LocalTimeBetweenPeaks",
                               "LocalTimeBetweenTroug": "LocalTimeBetweenTroug",
                               "LocalTimeOverThreshold": "LocalTimeOverThreshold",
@@ -896,6 +899,7 @@ class LecroyWR606Zi(TeledyneOscilloscope):
 
     def __init__(self, adapter, name="Lecroy WR606Zi Oscilloscope", **kwargs):
         super().__init__(adapter, name, **kwargs)
+        self._footer_size = 1  # termchar \n 1 byte
 
     event_status_enable_bits = Instrument.control(
         "*ESE?", "*ESE %d",
@@ -995,6 +999,16 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         and any configured processing."""
         self.write(f'VBS \'app.WaitUntilIdle({timeout})\'')
 
+    def save_setup(self, slot: int) -> None:
+        """Saves the current instrument settings into internal panel memory.
+        :param slot: int valid values are 1 to 6"""
+        self.write(f'VBS \'app.SaveRecall.Setup.SaveInternal{slot}\'')
+
+    def recall_setup(self, slot: int) -> None:
+        """Recall the settings which are stored in internal panel memory.
+         :param slot: int valid values are 1 to 6"""
+        self.write(f'VBS \'app.SaveRecall.Setup.RecallInternal{slot}\'')
+
     ##################
     # Timebase Setup #
     ##################
@@ -1076,6 +1090,56 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         """Get the sample rate of the scope."""
     )
 
+    def acquisition_sample_size(self, source):
+        """Get acquisition sample size for a certain channel. Used mainly for waveform acquisition.
+        If the source is MATH, the SANU? MATH query does not seem to work, so I return the memory
+        size instead.
+
+        :param source: channel number of channel name.
+        :return: acquisition sample size of that channel.
+        """
+        if isinstance(source, str):
+            source = sanitize_source(source)
+        if source in [1, "C1"]:
+            return self.acquisition_sample_size_c1
+        elif source in [2, "C2"]:
+            return self.acquisition_sample_size_c2
+        elif source in [3, "C3"]:
+            return self.acquisition_sample_size_c3
+        elif source in [4, "C4"]:
+            return self.acquisition_sample_size_c4
+        elif source == "MATH":
+            math_define = self.math_define[1]
+            match = re.match(r"'(\w+)[+\-/*](\w+)'", math_define)
+            return min(self.acquisition_sample_size(match.group(1)),
+                       self.acquisition_sample_size(match.group(2)))
+        else:
+            raise ValueError("Invalid source: must be 1, 2, 3, 4 or C1, C2, C3, C4, MATH.")
+
+    acquisition_sample_size_c1 = Instrument.measurement(
+        "VBS? 'return=app.Acquisition.C1.Out.Result.Samples'",
+        """Get the number of data points that the hardware
+        will acquire from the input signal of channel 1.""",
+    )
+
+    acquisition_sample_size_c2 = Instrument.measurement(
+        "VBS? 'return=app.Acquisition.C2.Out.Result.Samples'",
+        """Get the number of data points that the hardware
+        will acquire from the input signal of channel 2.""",
+    )
+
+    acquisition_sample_size_c3 = Instrument.measurement(
+        "VBS? 'return=app.Acquisition.C3.Out.Result.Samples'",
+        """Get the number of data points that the hardware
+        will acquire from the input signal of channel 3. """
+    )
+
+    acquisition_sample_size_c4 = Instrument.measurement(
+        "VBS? 'return=app.Acquisition.C4.Out.Result.Samples'",
+        """Get the number of data points that the hardware
+        will acquire from the input signal of channel 4."""
+    )
+
     def acquisition_clear_sweeps(self) -> None:
         """Resets any accumulated average data or persistence data for channel waveforms (C1..C4).
         Valid only when one or more channels have waveform averaging or persistence enabled
@@ -1098,12 +1162,143 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         <size>:={14K,140K,1.4M,14M} for interleave mode. Interleave mode means multiple active
         channels per A/D converter.
         """,
-        validator=truncated_discrete_set,
-        values=[{500: "0.5K", 1e3: "1K", 25e2: "2.5K", 5e3: "5K", 1e4: "10K", 25e3: "25k",
-                 5e4: "50K", 1e5: "100K", 25e4: "250K", 5e5: "500K", 1e6: "1M", 25e5: "2.5M",
-                 5e6: "5M", 1e7: "10M", 16e5: "16M"}, ],
-        map_values=True,
+        validator=strict_discrete_set,
+        values={500: "0.5K", 1e3: "1K", 25e2: "2.5K", 5e3: "5K", 1e4: "10K", 25e3: "25k",
+                 5e4: "50K", 1e5: "100K", 25e4: "250K", 5e5: "500K", 1e6: "1M", 25.e5: "2.5M",
+                 5e6: "5M", 1e7: "10M", 16e5: "16M"},
+        map_values=False,
     )
+
+    @property
+    def waveform_preamble(self):
+        """Get preamble information for the selected waveform source as a dict with the
+        following keys:
+
+        - "type": normal, peak detect, average, high resolution (str)
+        - "requested_points": number of data points requested by the user (int)
+        - "sampled_points": number of data points sampled by the oscilloscope (int)
+        - "transmitted_points": number of data points actually transmitted (optional) (int)
+        - "memory_size": size of the oscilloscope internal memory in bytes (int)
+        - "sparsing": sparse point. It defines the interval between data points. (int)
+        - "first_point": address of the first data point to be sent (int)
+        - "source": source of the data : "C1", "C2", "C3", "C4", "MATH".
+        - "unit": Physical units of the Y-axis
+        - "type":  type of data acquisition. Can be "normal", "peak", "average", "highres"
+        - "average": average times of average acquisition
+        - "sampling_rate": sampling rate (it is a read-only property)
+        - "grid_number": number of horizontal grids (it is a read-only property)
+        - "xdiv": horizontal scale (units per division) in seconds
+        - "xoffset": time interval in seconds between the trigger event and the reference position
+        - "ydiv": vertical scale (units per division) in Volts
+        - "yoffset": value that is represented at center of screen in Volts
+        """
+        vals = self.values("WFSU?")
+        preamble = {
+            "sparsing": vals[vals.index("SP") + 1],
+            "requested_points": vals[vals.index("NP") + 1],
+            "first_point": vals[vals.index("FP") + 1],
+            "transmitted_points": None,
+            "source": self.waveform_source,
+            "sampling_rate": self.acquisition_sampling_rate,
+            "grid_number": self._grid_number,
+            "memory_size": self.memory_size,
+            "xdiv": self.timebase_scale,
+            "xoffset": self.timebase_offset
+        }
+        strict_discrete_set(self.waveform_source, ["C1", "C2", "C3", "C4", "MATH"])
+        return self._fill_yaxis_preamble(preamble)
+
+    def _acquire_data(self, requested_points=0, sparsing=1):
+        """Acquire raw data points from the scope. The header, footer and number of points are
+        sanity-checked, but they are not processed otherwise. For a description of the input
+        arguments refer to the download_waveform method.
+        If the number of expected points is big enough, the transmission is split in smaller
+        chunks of 20k points and read one chunk at a time. I do not know the reason why,
+        but if the chunk size is big enough the transmission does not complete successfully.
+        :return: raw data points as numpy array and waveform preamble
+        """
+        # Setup waveform acquisition parameters
+        self.waveform_sparsing = sparsing
+        self.waveform_points = requested_points
+        self.waveform_first_point = 0
+
+        # Calculate how many points are to be expected
+        sample_points = self.acquisition_sample_size(self.waveform_source)
+        if requested_points > 0:
+            expected_points = min(requested_points, int(sample_points / sparsing))
+        else:
+            expected_points = int(sample_points / sparsing)
+
+        # If the number of points is big enough, split the data in small chunks and read it one
+        # chunk at a time. For less than a certain amount of points we do not bother splitting them.
+        chunk_bytes = 1000000
+        chunk_points = chunk_bytes - self._header_size - self._footer_size
+        iterations = -(expected_points // -chunk_points)
+        i = 0
+        data = []
+        while i < iterations:
+            # number of points already read
+            read_points = i * chunk_points
+            # number of points still to read
+            remaining_points = expected_points - read_points
+            # number of points requested in a single chunk
+            requested_points = chunk_points if remaining_points > chunk_points else remaining_points
+            self.waveform_points = requested_points
+            # number of bytes requested in a single chunk
+            requested_bytes = requested_points + self._header_size + self._footer_size
+            # read the next chunk starting from this points
+            first_point = read_points * sparsing
+            self.waveform_first_point = first_point
+            # read chunk of points
+            values = self._digitize(src=self.waveform_source, num_bytes=requested_bytes)
+            # perform many sanity checks on the received data
+            self._header_footer_sanity_checks(values)
+            self._npoints_sanity_checks(values)
+            # append the points without the header and footer
+            data.append(values[self._header_size:-self._footer_size])
+            i += 1
+        data = np.concatenate(data)
+        preamble = self.waveform_preamble
+        return data, preamble
+
+    def _fill_yaxis_preamble(self, preamble=None):
+        """Fill waveform preamble section concerning the Y-axis.
+        :param preamble: waveform preamble to be filled
+        :return: filled preamble
+        """
+        if preamble is None:
+            preamble = {}
+        if self.waveform_source == "MATH":
+            preamble["ydiv"] = self.math_vdiv
+            preamble["yoffset"] = self.math_vpos
+        else:
+            preamble["ydiv"] = self.ch(self.waveform_source).scale
+            preamble["yoffset"] = self.ch(self.waveform_source).offset
+        return preamble
+
+    def _header_footer_sanity_checks(self, message):
+        """Check that the header follows the predefined format.
+        The format of the header is DAT1,#9XXXXXXX where XXXXXXX is the number of acquired
+        points, and it is zero padded.
+        Then check that the footer is present. The footer is a line-carriage \n
+        :param message: raw bytes received from the scope """
+        message_header = bytes(message[0:self._header_size]).decode("ascii")
+        # Sanity check on header and footer
+        if message_header[0:7] != "DAT1,#9":
+            raise ValueError(f"Waveform data in invalid : header is {message_header}")
+        message_footer = bytes(message[-self._footer_size:]).decode("ascii")
+        if message_footer != "\n":
+            raise ValueError(f"Waveform data in invalid : footer is {message_footer}")
+
+    def _npoints_sanity_checks(self, message):
+        """Check that the number of transmitted points is consistent with the message length.
+        :param message: raw bytes received from the scope """
+        message_header = bytes(message[0:self._header_size]).decode("ascii")
+        transmitted_points = int(message_header[-9:])
+        received_points = len(message) - self._header_size - self._footer_size
+        if transmitted_points != received_points:
+            raise ValueError(f"Number of transmitted points ({transmitted_points}) != "
+                             f"number of received points ({received_points})")
 
     #################
     # Download data #
@@ -1148,6 +1343,34 @@ class LecroyWR606Zi(TeledyneOscilloscope):
         self.write("SCDP;*WAI")
         img = self.read_bytes(count=-1, break_on_termchar=True)
         return bytearray(img)
+
+    def _process_data(self, ydata, preamble):
+        """Apply scale and offset to the data points acquired from the scope.
+        - Y axis : the scale is ydiv / 25 and the offset -yoffset. the
+        offset is not applied for the MATH source.
+        - X axis : the scale is sparsing / sampling_rate and the offset is -xdiv * 7. The
+        7 = 14 / 2 factor comes from the fact that there are 14 vertical grid lines and the data
+        starts from the left half of the screen.
+
+        :return: tuple of (numpy array of Y points, numpy array of X points, waveform preamble) """
+
+        def _scale_data(y):
+            if preamble["source"] == "MATH":
+                value = int.from_bytes([y], byteorder='big', signed=False) * preamble["ydiv"] / 25.
+                value -= preamble["ydiv"] * (preamble["yoffset"] + 255) / 50.
+            else:
+                value = int.from_bytes([y], byteorder='big', signed=True) * preamble["ydiv"] / 25.
+                value -= preamble["yoffset"]
+            return value
+
+        def _scale_time(x):
+            return float(Decimal(-preamble["xdiv"] * self._grid_number / 2.) +
+                         Decimal(float(x * preamble["sparsing"])) /
+                         Decimal(preamble["sampling_rate"]))
+
+        data_points = np.vectorize(_scale_data)(ydata)
+        time_points = np.vectorize(_scale_time)(np.arange(len(data_points)))
+        return data_points, time_points, preamble
 
     ###############
     #   Trigger   #
