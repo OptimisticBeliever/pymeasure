@@ -1276,6 +1276,23 @@ class LecroyWR606Zi(TeledyneOscilloscope):
             preamble["yoffset"] = self.ch(self.waveform_source).offset
         return preamble
 
+    def _digitize(self, src, num_bytes=None):
+        """Acquire waveforms according to the settings of the acquire commands.
+        Note.
+        If the requested number of bytes is not specified, the default chunk size is used,
+        but in such a case it cannot be quaranteed that the message is received in its entirety.
+
+        :param src: source of data: "C1", "C2", "C3", "C4", "MATH".
+        :param: num_bytes: number of bytes expected from the scope (including the header and
+        footer).
+        :return: bytearray with raw data.
+        """
+        #with _ChunkResizer(self.adapter, num_bytes):
+        binary_values = self.binary_values(f"{src}:WF? DAT1", dtype=np.uint8)
+        if num_bytes is not None and len(binary_values) != num_bytes:
+            raise BufferError(f"read bytes ({len(binary_values)}) != requested bytes ({num_bytes})")
+        return binary_values
+
     def _header_footer_sanity_checks(self, message):
         """Check that the header follows the predefined format.
         The format of the header is DAT1,#9XXXXXXX where XXXXXXX is the number of acquired
