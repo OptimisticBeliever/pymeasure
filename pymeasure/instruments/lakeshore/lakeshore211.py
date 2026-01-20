@@ -1,7 +1,7 @@
 #
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2022 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 import logging
 
-from pymeasure.instruments import Instrument
+from pymeasure.instruments import Instrument, SCPIUnknownMixin
 from pymeasure.instruments.validators import strict_discrete_set
 from pyvisa.constants import Parity
 from enum import IntEnum
@@ -33,7 +33,7 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-class LakeShore211(Instrument):
+class LakeShore211(SCPIUnknownMixin, Instrument):
     """ Represents the Lake Shore 211 Temperature Monitor and provides
     a high-level interface for interacting with the instrument.
 
@@ -116,7 +116,7 @@ class LakeShore211(Instrument):
             strict_discrete_set(v[0], vs[0]), strict_discrete_set(v[1], vs[1])),
         values=[list(AnalogMode), list(AnalogRange)],
         # These are the vs values in the validator lambda
-        get_process=lambda x: (LakeShore211.AnalogMode(x[0]), LakeShore211.AnalogRange(x[1])),
+        get_process_list=lambda x: (LakeShore211.AnalogMode(x[0]), LakeShore211.AnalogRange(x[1])),
         cast=int
     )
 

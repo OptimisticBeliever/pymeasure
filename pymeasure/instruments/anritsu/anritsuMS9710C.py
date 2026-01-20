@@ -1,7 +1,7 @@
 #
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2024 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 import logging
 from time import sleep
 import numpy as np
-from pymeasure.instruments import Instrument
+from pymeasure.instruments import Instrument, SCPIUnknownMixin
 from pymeasure.instruments.validators import (
     strict_discrete_set,
     truncated_discrete_set,
@@ -64,7 +64,7 @@ def _parse_trace_peak(vals):
     return res
 
 
-class AnritsuMS9710C(Instrument):
+class AnritsuMS9710C(SCPIUnknownMixin, Instrument):
     """Anritsu MS9710C Optical Spectrum Analyzer."""
 
     def __init__(self, adapter, name="Anritsu MS9710C Optical Spectrum Analyzer", **kwargs):
@@ -275,7 +275,7 @@ class AnritsuMS9710C(Instrument):
     trace_marker = Instrument.control(
         "TMK?", "TMK %f",
         "Control the trace marker with a wavelength.  Returns the trace wavelength and power.",
-        get_process=_parse_trace_peak
+        get_process_list=_parse_trace_peak
     )
 
     @property

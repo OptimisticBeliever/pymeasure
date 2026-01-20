@@ -1,7 +1,7 @@
 #
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2024 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 # THE SOFTWARE.
 #
 
-from pymeasure.instruments import Instrument
+from pymeasure.instruments import Instrument, SCPIMixin
 
 
 def clean_closed_channels(output):
@@ -50,14 +50,14 @@ def clean_closed_channels(output):
         raise ValueError("`output` must be a string or list.")
 
 
-class Keithley2750(Instrument):
+class Keithley2750(SCPIMixin, Instrument):
     """ Represents the Keithley2750 multimeter/switch system and provides a high-level interface for
     interacting with the instrument.
     """
 
-    closed_channels = Instrument.measurement(":ROUTe:CLOSe?",
-                                             "Reads the list of closed channels",
-                                             get_process=clean_closed_channels)
+    closed_channels = Instrument.measurement(
+        ":ROUTe:CLOSe?", "Get the list of closed channels.", get_process_list=clean_closed_channels
+    )
 
     def __init__(self, adapter, name="Keithley 2750 Multimeter/Switch System", **kwargs):
         super().__init__(

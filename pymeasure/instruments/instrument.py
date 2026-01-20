@@ -1,7 +1,7 @@
 #
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2024 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,10 @@
 
 import logging
 import time
+from warnings import warn
 
 from .common_base import CommonBase
-from ..adapters import VISAAdapter
+from ..adapters.visa import VISAAdapter
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -58,21 +59,19 @@ class Instrument(CommonBase):
 
     :param adapter: A string, integer, or :py:class:`~pymeasure.adapters.Adapter` subclass object
     :param string name: The name of the instrument. Often the model designation by default.
-    :param includeSCPI: A boolean, which toggles the inclusion of standard SCPI commands
-    :param preprocess_reply: An optional callable used to preprocess
-        strings received from the instrument. The callable returns the
-        processed string.
+    :param includeSCPI: An obligatory boolean, which toggles the inclusion of standard SCPI commands
 
-        .. deprecated:: 0.11
-            Implement it in the instrument's `read` method instead.
+        .. deprecated:: 0.14
+            If True, inherit the :class:`~pymeasure.instruments.generic_types.SCPIMixin` class
+            instead.
+
     :param \\**kwargs: In case ``adapter`` is a string or integer, additional arguments passed on
         to :py:class:`~pymeasure.adapters.VISAAdapter` (check there for details).
         Discarded otherwise.
     """
 
     # noinspection PyPep8Naming
-    def __init__(self, adapter, name, includeSCPI=True,
-                 preprocess_reply=None,
+    def __init__(self, adapter, name, includeSCPI=None,
                  **kwargs):
         # Setup communication before possible children require the adapter.
         if isinstance(adapter, (int, str)):
@@ -82,11 +81,18 @@ class Instrument(CommonBase):
                 raise Exception("Invalid Adapter provided for Instrument since"
                                 " PyVISA is not present")
         self.adapter = adapter
+        if includeSCPI is True:
+            warn("Defining SCPI base functionality with `includeSCPI=True` is deprecated, inherit "
+                 "the `SCPIMixin` class instead.", FutureWarning)
+        elif includeSCPI is None:
+            warn("It is deprecated to specify `includeSCPI` implicitly, use "
+                 "`includeSCPI=False` or inherit the `SCPIMixin` class instead.", FutureWarning)
+            includeSCPI = True
         self.SCPI = includeSCPI
         self.isShutdown = False
         self.name = name
 
-        super().__init__(preprocess_reply=preprocess_reply)
+        super().__init__()
 
         log.info("Initializing %s." % self.name)
 
@@ -183,10 +189,10 @@ class Instrument(CommonBase):
         return self.adapter.read_binary_values(**kwargs)
 
     # Communication functions
-    def wait_for(self, query_delay=0):
+    def wait_for(self, query_delay=None):
         """Wait for some time. Used by 'ask' to wait before reading.
 
-        :param query_delay: Delay between writing and reading in seconds.
+        :param query_delay: Delay between writing and reading in seconds. None is default delay.
         """
         if query_delay:
             time.sleep(query_delay)

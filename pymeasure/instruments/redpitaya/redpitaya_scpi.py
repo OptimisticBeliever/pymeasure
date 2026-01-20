@@ -1,7 +1,7 @@
 #
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2023 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 import datetime
 import numpy as np
 
-from pymeasure.instruments import Instrument, Channel
+from pymeasure.instruments import Instrument, Channel, SCPIMixin
 from pymeasure.instruments.validators import truncated_range, strict_discrete_set
 
 import logging
@@ -158,7 +158,7 @@ class AnalogInputFastChannel(Channel):
         return max_range * data / (2**16 - 1) - max_range / 2
 
 
-class RedPitayaScpi(Instrument):
+class RedPitayaScpi(SCPIMixin, Instrument):
     """This is the class for the Redpitaya reconfigurable board
 
     The instrument is accessed using a TCP/IP Socket communication, that is an adapter in the form:
@@ -214,7 +214,7 @@ class RedPitayaScpi(Instrument):
                               "SYST:TIME %s",
                               """Control the time on board
                               time should be given as a datetime.time object""",
-                              get_process=lambda _tstr:
+                              get_process_list=lambda _tstr:
                               datetime.time(*[int(split) for split in _tstr]),
                               set_process=lambda _time:
                               _time.strftime('%H,%M,%S'),
@@ -224,7 +224,7 @@ class RedPitayaScpi(Instrument):
                               "SYST:DATE %s",
                               """Control the date on board
                               date should be given as a datetime.date object""",
-                              get_process=lambda dstr:
+                              get_process_list=lambda dstr:
                               datetime.date(*[int(split) for split in dstr]),
                               set_process=lambda date: date.strftime('%Y,%m,%d'),
                               )

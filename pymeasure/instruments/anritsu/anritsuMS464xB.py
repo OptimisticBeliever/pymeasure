@@ -1,7 +1,7 @@
 #
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2024 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 #
 import logging
 
-from pymeasure.instruments import Instrument, Channel
+from pymeasure.instruments import Instrument, Channel, SCPIUnknownMixin
 from pymeasure.instruments.validators import (
     strict_discrete_set,
     strict_range
@@ -33,7 +33,7 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
 
-class AnritsuMS464xB(Instrument):
+class AnritsuMS464xB(SCPIUnknownMixin, Instrument):
     """ A class representing the Anritsu MS464xB Vector Network Analyzer (VNA) series.
 
     This family consists of the MS4642B, MS4644B, MS4645B, and MS4647B, which are represented in
@@ -41,9 +41,10 @@ class AnritsuMS464xB(Instrument):
     :class:`~.AnritsuMS4645B`, :class:`~.AnritsuMS4647B`), that only differ in the available
     frequency range.
 
-    They can contain up to 16 instances of :class:`~.MeasurementChannel` (depending on the
-    configuration of the instrument), that are accessible via the `channels` dict or directly via
-    `ch_` + the channel number.
+    They can contain up to 16 instances of
+    :class:`~pymeasure.instruments.anritsu.anritsuMS464xB.MeasurementChannel`
+    (depending on the configuration of the instrument), that are accessible via the
+    `channels` dict or directly via `ch_` + the channel number.
 
     :param active_channels: defines the number of active channels (default=16); if active_channels
         is "auto", the instrument will be queried for the number of active channels.
@@ -516,7 +517,9 @@ class AnritsuMS464xB(Instrument):
 
 
 class Port(Channel):
-    """Represents a port within a :class:`~.MeasurementChannel` of the Anritsu MS464xB VNA. """
+    """Represents a port within a
+    :class:`~pymeasure.instruments.anritsu.anritsuMS464xB.MeasurementChannel`
+    of the Anritsu MS464xB VNA."""
     placeholder = "pt"
 
     power_level = Channel.control(
@@ -528,7 +531,9 @@ class Port(Channel):
 
 
 class Trace(Channel):
-    """Represents a trace within a :class:`~.MeasurementChannel` of the Anritsu MS464xB VNA. """
+    """Represents a trace within a
+    :class:`~pymeasure.instruments.anritsu.anritsuMS464xB.MeasurementChannel`
+    of the Anritsu MS464xB VNA."""
     placeholder = "tr"
 
     def activate(self):

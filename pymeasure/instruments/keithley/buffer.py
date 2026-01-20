@@ -1,7 +1,7 @@
 #
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2024 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -41,16 +41,15 @@ class KeithleyBuffer:
 
     buffer_points = Instrument.control(
         ":TRAC:POIN?", ":TRAC:POIN %d",
-        """ An integer property that controls the number of buffer points. This
-        does not represent actual points in the buffer, but the configuration
-        value instead. """,
+        """ Control the number of buffer points. This does not represent actual points
+        in the buffer, but the configuration value instead. """,
         validator=truncated_range,
         values=[2, 1024],
         cast=int
     )
 
     def config_buffer(self, points=64, delay=0):
-        """ Configures the measurement buffer for a number of points, to be
+        """ Configure the measurement buffer for a number of points, to be
         taken with a specified delay.
 
         :param points: The number of points in the buffer.
@@ -67,13 +66,13 @@ class KeithleyBuffer:
         self.check_errors()
 
     def is_buffer_full(self):
-        """ Returns True if the buffer is full of measurements. """
-        status_bit = int(self.ask("*STB?"))
-        return status_bit == 65
+        """ Return True if the buffer is full of measurements. """
+        status_byte = int(self.ask("*STB?"))
+        return (status_byte & 65) == 65
 
     def wait_for_buffer(self, should_stop=lambda: False,
                         timeout=60, interval=0.1):
-        """ Blocks the program, waiting for a full buffer. This function
+        """ Block the program, waiting for a full buffer. This function
         returns early if the :code:`should_stop` function returns True or
         the timeout is reached before the buffer is full.
 
@@ -93,7 +92,7 @@ class KeithleyBuffer:
 
     @property
     def buffer_data(self):
-        """ Returns a numpy array of values from the buffer. """
+        """ Get a numpy array of values from the buffer. """
         self.write(":FORM:DATA ASCII")
         return np.array(self.values(":TRAC:DATA?"), dtype=np.float64)
 
@@ -102,11 +101,11 @@ class KeithleyBuffer:
         self.write(":INIT")
 
     def reset_buffer(self):
-        """ Resets the buffer. """
+        """ Reset the buffer. """
         self.write(":STAT:PRES;*CLS;:TRAC:CLEAR;:TRAC:FEED:CONT NEXT;")
 
     def stop_buffer(self):
-        """ Aborts the buffering measurement, by stopping the measurement
+        """ Abort the buffering measurement, by stopping the measurement
         arming and triggering sequence. If possible, a Selected Device
         Clear (SDC) is used. """
         if type(self.adapter) is PrologixAdapter:
@@ -115,7 +114,7 @@ class KeithleyBuffer:
             self.write(":ABOR")
 
     def disable_buffer(self):
-        """ Disables the connection between measurements and the
+        """ Disable the connection between measurements and the
         buffer, but does not abort the measurement process.
         """
         self.write(":TRAC:FEED:CONT NEV")

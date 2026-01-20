@@ -1,7 +1,7 @@
 #
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2024 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,11 @@
 import pytest
 from unittest import mock
 
-from pymeasure.display.inputs import ScientificInput, BooleanInput, ListInput
-from pymeasure.experiment.parameters import BooleanParameter, ListParameter, FloatParameter
+from pymeasure.display.Qt import QtCore
+from pymeasure.display.inputs import (ScientificInput, BooleanInput, ListInput,
+                                      VectorInput)
+from pymeasure.experiment.parameters import (BooleanParameter, ListParameter, FloatParameter,
+                                             VectorParameter)
 
 
 @pytest.mark.parametrize("default_value", [True, False])
@@ -238,3 +241,43 @@ class TestScientificInput:
             sci_input.setValue(5.0)
             sci_input.parameter  # lazy update
             p.assert_called_once_with(5.0)
+
+    @pytest.mark.parametrize("locale, decimalSep", [
+        [QtCore.QLocale(QtCore.QLocale.English,
+                        QtCore.QLocale.LatinScript,
+                        QtCore.QLocale.UnitedKingdom), "."],
+        [QtCore.QLocale(QtCore.QLocale.Dutch,
+                        QtCore.QLocale.LatinScript,
+                        QtCore.QLocale.Netherlands), ","],
+    ])
+    def test_locale_settings(self, qtbot, locale, decimalSep):
+        assert locale.decimalPoint() == decimalSep
+        QtCore.QLocale.setDefault(locale)
+
+        float_param = FloatParameter('potato',
+                                     minimum=-1000, maximum=1000, default=1.3)
+        sci_input = ScientificInput(float_param)
+
+        # Check if the modified locale is set
+        assert sci_input.locale().decimalPoint() == decimalSep
+        assert sci_input.validator.locale().decimalPoint() == decimalSep
+
+        # Check if conversion from double to text works correctly
+        assert sci_input.valueFromText(f"2{decimalSep}6") == 2.6
+        # Check if conversion from text to double works correctly
+        assert sci_input.textFromValue(2.6) == f"2{decimalSep}6"
+
+        # Reset the locale settings
+        QtCore.QLocale.setDefault(QtCore.QLocale.system())
+
+
+class TestVectorInput:
+    def test_init_from_param(self, qtbot):
+        vector_param = VectorParameter('vector_test',
+                                       default=[-1.35, 2, 3.6e+5],
+                                       )
+
+        vector_param = VectorInput(vector_param)
+        qtbot.addWidget(vector_param)
+
+        assert "[-1.35, 2.0, 360000.0]" == vector_param.value()

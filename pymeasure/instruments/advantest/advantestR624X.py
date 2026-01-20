@@ -1,6 +1,7 @@
+#
 # This file is part of the PyMeasure package.
 #
-# Copyright (c) 2013-2024 PyMeasure Developers
+# Copyright (c) 2013-2025 PyMeasure Developers
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +24,7 @@
 
 import logging
 from enum import IntEnum, IntFlag
-from pymeasure.instruments import Instrument, Channel
+from pymeasure.instruments import Instrument, Channel, SCPIUnknownMixin
 from pymeasure.instruments.validators import truncated_range, strict_discrete_set, \
     strict_range
 
@@ -429,7 +430,7 @@ def map_values(value, values):
     return values[strict_discrete_set(value, values)]
 
 
-class AdvantestR624X(Instrument):
+class AdvantestR624X(SCPIUnknownMixin, Instrument):
     """ Represents the Advantest R624X series (channel A and B) SourceMeter and provides a
     high-level interface for interacting with the instrument.
 
@@ -961,7 +962,7 @@ class AdvantestR624X(Instrument):
 
     self_test = Instrument.measurement(
         "*tst?",
-        """ A query command that runs a self-test and reads the result (``*TST?``).
+        """Get the result of self test after running it.
         """,
         cast=int,
     )
@@ -1884,7 +1885,7 @@ class SMUChannel(Channel):
 
     measurement_count = Channel.measurement(
         "nub_0{ch}?",
-        """ Measaure the number of measurements contained in the measurement
+        """ Measure the number of measurements contained in the measurement
         data buffer (``NUB?``). """,
         cast=int
     )
